@@ -1,0 +1,15 @@
+services:
+  - type: web
+    name: sentimentai
+    env: python
+    plan: free
+    buildCommand: |
+      pip install -r requirements.txt
+      python -m nltk.downloader vader_lexicon punkt_tab
+      python -m textblob.download_corpora
+    startCommand: gunicorn app:app
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.11"
+      - key: PORT
+        value: "10000"

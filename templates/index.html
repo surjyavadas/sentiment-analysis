@@ -1,0 +1,1677 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="SentimentAI — AI-powered sentiment analysis for social media. Paste a tweet link, Instagram post, Reddit thread or YouTube comment and decode the emotion behind it.">
+<title>SentimentAI — Understand Any Post. Instantly.</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>✨</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<style>
+/* ═══════════════════════════════════════════════════════════════
+   SentimentAI — Vibrant Colorful Design System
+   ═══════════════════════════════════════════════════════════════ */
+:root {
+  --bg-main:        #F7F3FF;
+  --bg-card:        #FFFFFF;
+  --bg-pink:        #FFF0FB;
+  --bg-mint:        #F0FDFA;
+  --bg-warm:        #FFFBEB;
+  --purple:         #7C3AED;
+  --purple-light:   #EDE9FE;
+  --purple-dark:    #5B21B6;
+  --pink:           #EC4899;
+  --pink-light:     #FDF2F8;
+  --cyan:           #06B6D4;
+  --cyan-light:     #ECFEFF;
+  --green:          #10B981;
+  --green-light:    #D1FAE5;
+  --red:            #EF4444;
+  --red-light:      #FEE2E2;
+  --amber:          #F59E0B;
+  --amber-light:    #FEF3C7;
+  --text-primary:   #1E1B4B;
+  --text-secondary: #6B7280;
+  --text-muted:     #9CA3AF;
+  --border:         rgba(124,58,237,0.1);
+  --shadow:         0 8px 32px rgba(124,58,237,0.1);
+  --shadow-lg:      0 20px 60px rgba(124,58,237,0.15);
+  --font-heading:   'Outfit', sans-serif;
+  --font-body:      'Inter', sans-serif;
+  --ease:           cubic-bezier(0.4, 0, 0.2, 1);
+  --radius:         20px;
+  --radius-sm:      12px;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--font-body);
+  background: var(--bg-main);
+  color: var(--text-primary);
+  line-height: 1.6;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+::selection { background: var(--purple); color: #fff; }
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: var(--bg-main); }
+::-webkit-scrollbar-thumb { background: var(--purple-light); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: var(--purple); }
+
+/* ─── Layout ──────────────────────────────────────────────── */
+.container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+section { padding: 80px 0; position: relative; }
+
+/* ─── Card System ─────────────────────────────────────────── */
+.card {
+  background: var(--bg-card);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  border: 1px solid var(--border);
+  transition: all 300ms var(--ease);
+  position: relative;
+  overflow: hidden;
+}
+.card:hover { box-shadow: var(--shadow-lg); transform: translateY(-2px); }
+.card-accent::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; height: 3px;
+  background: linear-gradient(90deg, var(--purple), var(--pink), var(--cyan));
+}
+
+/* ─── Navigation ──────────────────────────────────────────── */
+.nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  padding: 12px 0;
+  background: rgba(247,243,255,0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+  transition: all 300ms var(--ease);
+}
+.nav.scrolled { box-shadow: 0 4px 20px rgba(124,58,237,0.08); }
+.nav .container { display: flex; align-items: center; justify-content: space-between; }
+.nav-brand {
+  font-family: var(--font-heading); font-weight: 800; font-size: 1.4rem;
+  color: var(--text-primary); text-decoration: none; display: flex; align-items: center; gap: 8px;
+}
+.nav-brand .logo-text {
+  background: linear-gradient(135deg, var(--purple), var(--pink));
+  -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+}
+.nav-links { display: flex; gap: 4px; align-items: center; }
+.nav-links a {
+  color: var(--text-secondary); text-decoration: none; font-size: 0.85rem; font-weight: 500;
+  padding: 8px 16px; border-radius: 10px; transition: all 300ms var(--ease);
+}
+.nav-links a:hover { color: var(--purple); background: var(--purple-light); }
+.nav-links a.active { color: var(--purple); background: var(--purple-light); font-weight: 600; }
+.nav-cta {
+  background: linear-gradient(135deg, var(--purple), var(--pink));
+  color: #fff !important; font-weight: 600 !important; border-radius: 10px;
+  padding: 8px 20px !important; box-shadow: 0 4px 15px rgba(124,58,237,0.3);
+  transition: all 300ms var(--ease);
+}
+.nav-cta:hover { transform: translateY(-1px); box-shadow: 0 6px 25px rgba(124,58,237,0.4); background: linear-gradient(135deg, var(--purple), var(--pink)) !important; }
+.hamburger { display: none; background: none; border: none; font-size: 1.5rem; color: var(--text-primary); cursor: pointer; padding: 8px; }
+.mobile-menu {
+  display: none; position: fixed; top: 60px; left: 0; right: 0; bottom: 0;
+  background: rgba(247,243,255,0.98); backdrop-filter: blur(20px);
+  flex-direction: column; padding: 24px; gap: 8px; z-index: 99;
+}
+.mobile-menu.open { display: flex; animation: slideDown 0.3s var(--ease); }
+.mobile-menu a { font-size: 1.1rem; padding: 14px 20px; border-radius: 12px; color: var(--text-primary); text-decoration: none; font-weight: 500; }
+.mobile-menu a:hover { background: var(--purple-light); color: var(--purple); }
+@keyframes slideDown { from{opacity:0;transform:translateY(-10px)} to{opacity:1;transform:translateY(0)} }
+
+/* ─── Hero Section ────────────────────────────────────────── */
+#hero {
+  min-height: 100vh; display: flex; align-items: center;
+  position: relative; padding-top: 80px;
+  background: var(--bg-main);
+  overflow: hidden;
+}
+.gradient-mesh {
+  position: absolute; inset: 0; z-index: 0; overflow: hidden;
+}
+.gradient-mesh::before, .gradient-mesh::after, .gradient-mesh .mesh-3 {
+  content: ''; position: absolute; border-radius: 50%; filter: blur(80px); opacity: 0.5;
+}
+.gradient-mesh::before {
+  width: 600px; height: 600px;
+  background: radial-gradient(circle, rgba(124,58,237,0.3), transparent 70%);
+  top: -100px; right: -100px;
+  animation: meshFloat1 12s ease-in-out infinite;
+}
+.gradient-mesh::after {
+  width: 500px; height: 500px;
+  background: radial-gradient(circle, rgba(236,72,153,0.25), transparent 70%);
+  bottom: -50px; left: -100px;
+  animation: meshFloat2 15s ease-in-out infinite;
+}
+.gradient-mesh .mesh-3 {
+  width: 400px; height: 400px;
+  background: radial-gradient(circle, rgba(6,182,212,0.2), transparent 70%);
+  top: 50%; left: 50%; transform: translate(-50%, -50%);
+  animation: meshFloat3 10s ease-in-out infinite;
+}
+@keyframes meshFloat1 { 0%,100%{transform:translate(0,0)} 33%{transform:translate(-30px,40px)} 66%{transform:translate(20px,-20px)} }
+@keyframes meshFloat2 { 0%,100%{transform:translate(0,0)} 33%{transform:translate(40px,-30px)} 66%{transform:translate(-20px,20px)} }
+@keyframes meshFloat3 { 0%,100%{transform:translate(-50%,-50%) scale(1)} 50%{transform:translate(-50%,-50%) scale(1.2)} }
+
+.hero-content {
+  position: relative; z-index: 1; width: 100%;
+  text-align: center; max-width: 800px; margin: 0 auto;
+}
+.hero-content h1 {
+  font-family: var(--font-heading); font-size: 3.8rem; font-weight: 800;
+  line-height: 1.1; margin-bottom: 20px; color: var(--text-primary);
+}
+.hero-content h1 .gradient {
+  background: linear-gradient(135deg, var(--purple), var(--pink), var(--cyan));
+  -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+  background-size: 200% auto;
+  animation: gradientShift 4s ease-in-out infinite;
+}
+@keyframes gradientShift { 0%{background-position:0% center} 50%{background-position:100% center} 100%{background-position:0% center} }
+.hero-content .subtitle {
+  color: var(--text-secondary); font-size: 1.15rem; margin-bottom: 36px;
+  max-width: 600px; margin-left: auto; margin-right: auto;
+}
+.hero-buttons { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-bottom: 48px; }
+.stats-bar {
+  display: flex; gap: 32px; justify-content: center; flex-wrap: wrap;
+  padding: 20px 32px; border-radius: var(--radius); background: var(--bg-card);
+  box-shadow: var(--shadow); border: 1px solid var(--border);
+}
+.stats-bar .stat { text-align: center; }
+.stats-bar .stat-num { font-family: var(--font-heading); font-weight: 700; font-size: 1.3rem; color: var(--purple); }
+.stats-bar .stat-lbl { font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; }
+
+/* ─── Buttons ─────────────────────────────────────────────── */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  padding: 14px 28px; border: none; border-radius: var(--radius-sm);
+  font-family: var(--font-body); font-size: 0.95rem; font-weight: 600;
+  cursor: pointer; transition: all 300ms var(--ease); position: relative; overflow: hidden;
+  text-decoration: none;
+}
+.btn-primary {
+  background: linear-gradient(135deg, var(--purple), var(--pink));
+  color: #fff; box-shadow: 0 4px 15px rgba(124,58,237,0.3);
+}
+.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(124,58,237,0.4); }
+.btn-secondary {
+  background: var(--bg-card); border: 2px solid var(--border);
+  color: var(--text-primary); box-shadow: var(--shadow);
+}
+.btn-secondary:hover { border-color: var(--purple); color: var(--purple); }
+.btn-danger { background: var(--red-light); border: 1px solid rgba(239,68,68,0.3); color: var(--red); }
+.btn-danger:hover { background: rgba(239,68,68,0.2); }
+.btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none !important; }
+.btn .spinner { width: 18px; height: 18px; border: 2px solid rgba(255,255,255,0.3); border-top-color: #fff; border-radius: 50%; animation: spin 0.6s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ─── Tabs ────────────────────────────────────────────────── */
+.tab-bar {
+  display: flex; gap: 4px; padding: 4px;
+  background: var(--purple-light); border-radius: var(--radius-sm);
+  margin-bottom: 24px;
+}
+.tab-btn {
+  flex: 1; padding: 12px 20px; border: none; border-radius: 10px;
+  font-family: var(--font-body); font-size: 0.9rem; font-weight: 600;
+  cursor: pointer; transition: all 300ms var(--ease);
+  background: transparent; color: var(--text-secondary);
+}
+.tab-btn.active {
+  background: var(--bg-card); color: var(--purple);
+  box-shadow: 0 2px 10px rgba(124,58,237,0.15);
+}
+.tab-btn:hover:not(.active) { color: var(--purple); }
+.tab-panel { display: none; }
+.tab-panel.active { display: block; animation: fadeIn 0.3s var(--ease); }
+@keyframes fadeIn { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
+
+/* ─── Analyzer Section ────────────────────────────────────── */
+#analyzer { background: var(--bg-card); }
+.analyzer-card {
+  max-width: 800px; margin: 0 auto; padding: 40px;
+  background: var(--bg-card); border-radius: var(--radius);
+  box-shadow: var(--shadow-lg); border: 1px solid var(--border);
+  position: relative; overflow: hidden;
+}
+.analyzer-card::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px;
+  background: linear-gradient(90deg, var(--purple), var(--pink), var(--cyan));
+}
+.url-input-group {
+  display: flex; gap: 12px; margin-bottom: 16px;
+}
+.url-input-group input {
+  flex: 1; padding: 14px 18px; border: 2px solid var(--border);
+  border-radius: var(--radius-sm); font-family: var(--font-body); font-size: 0.95rem;
+  color: var(--text-primary); background: var(--bg-main); outline: none;
+  transition: all 300ms var(--ease);
+}
+.url-input-group input:focus { border-color: var(--purple); box-shadow: 0 0 0 4px rgba(124,58,237,0.1); }
+.url-input-group input::placeholder { color: var(--text-muted); }
+.platform-badges {
+  display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px;
+}
+.platform-badge {
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 4px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 500;
+  background: var(--purple-light); color: var(--text-secondary);
+  transition: all 200ms var(--ease);
+}
+.platform-badge:hover { background: var(--purple); color: #fff; }
+.text-input-area {
+  width: 100%; min-height: 120px; padding: 16px; padding-bottom: 32px;
+  border: 2px solid var(--border); border-radius: var(--radius-sm);
+  color: var(--text-primary); font-family: var(--font-body); font-size: 0.95rem;
+  background: var(--bg-main); resize: vertical; outline: none;
+  transition: all 300ms var(--ease);
+}
+.text-input-area:focus { border-color: var(--purple); box-shadow: 0 0 0 4px rgba(124,58,237,0.1); }
+.text-input-area::placeholder { color: var(--text-muted); }
+.input-footer {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-top: 16px; flex-wrap: wrap; gap: 12px;
+}
+.char-counter {
+  font-size: 0.8rem; font-weight: 500; color: var(--text-muted);
+  transition: color 300ms var(--ease);
+}
+.char-counter.warning { color: var(--amber); }
+.char-counter.danger { color: var(--red); }
+.model-select {
+  padding: 10px 16px; background: var(--bg-main); border: 2px solid var(--border);
+  border-radius: 10px; color: var(--text-primary); font-family: var(--font-body);
+  font-size: 0.85rem; font-weight: 500; outline: none; cursor: pointer;
+  transition: all 300ms var(--ease);
+}
+.model-select:focus { border-color: var(--purple); }
+.model-select option { background: var(--bg-card); }
+
+/* ─── Loading State ───────────────────────────────────────── */
+.loading-card {
+  display: none; text-align: center; padding: 48px; margin-top: 24px;
+  background: var(--bg-card); border-radius: var(--radius);
+  border: 1px solid var(--border); box-shadow: var(--shadow);
+}
+.loading-card.visible { display: block; animation: fadeIn 0.3s var(--ease); }
+.loading-spinner {
+  width: 48px; height: 48px; border: 4px solid var(--purple-light);
+  border-top-color: var(--purple); border-radius: 50%;
+  animation: spin 0.8s linear infinite; margin: 0 auto 16px;
+}
+.loading-card .platform-icon { font-size: 2rem; margin-bottom: 12px; }
+.loading-card .loading-text { color: var(--text-secondary); font-weight: 500; }
+
+/* ─── Result Card ─────────────────────────────────────────── */
+#result-section { display: none; }
+#result-section.visible { display: block; }
+.result-card {
+  max-width: 800px; margin: 32px auto 0; padding: 32px;
+  background: var(--bg-card); border-radius: var(--radius);
+  box-shadow: var(--shadow-lg); border: 1px solid var(--border);
+  animation: slideUp 0.5s var(--ease);
+  position: relative; overflow: hidden;
+}
+.result-card::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px;
+  background: linear-gradient(90deg, var(--purple), var(--pink), var(--cyan));
+}
+@keyframes slideUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+
+.platform-result-badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 6px 14px; border-radius: 20px; font-size: 0.8rem; font-weight: 600;
+  margin-bottom: 16px;
+}
+.quote-box {
+  padding: 20px 24px; margin: 16px 0;
+  background: var(--bg-main); border-radius: var(--radius-sm);
+  border-left: 4px solid var(--purple); font-style: italic;
+  color: var(--text-secondary); line-height: 1.8;
+}
+.result-header { display: flex; align-items: center; gap: 16px; margin-bottom: 20px; flex-wrap: wrap; }
+.result-emoji { font-size: 3rem; animation: bounceIn 0.5s var(--ease); }
+@keyframes bounceIn { 0%{transform:scale(0)} 50%{transform:scale(1.2)} 100%{transform:scale(1)} }
+.result-label {
+  font-family: var(--font-heading); font-size: 2rem; font-weight: 800; text-transform: uppercase;
+}
+.result-label.positive { color: var(--green); }
+.result-label.negative { color: var(--red); }
+.result-label.neutral { color: var(--amber); }
+
+/* Confidence Arc Gauge */
+.arc-gauge-container {
+  display: flex; justify-content: center; margin: 24px 0;
+}
+.arc-gauge { position: relative; width: 200px; height: 110px; }
+.arc-gauge svg { width: 200px; height: 110px; }
+.arc-gauge .arc-bg { fill: none; stroke: var(--purple-light); stroke-width: 12; }
+.arc-gauge .arc-fill { fill: none; stroke-width: 12; stroke-linecap: round; transition: stroke-dashoffset 1.5s var(--ease); }
+.arc-gauge .arc-fill.positive { stroke: var(--green); }
+.arc-gauge .arc-fill.negative { stroke: var(--red); }
+.arc-gauge .arc-fill.neutral { stroke: var(--amber); }
+.arc-gauge .arc-value {
+  position: absolute; bottom: 0; left: 50%; transform: translateX(-50%);
+  font-family: var(--font-heading); font-size: 2rem; font-weight: 800;
+  color: var(--text-primary);
+}
+.arc-gauge .arc-label {
+  position: absolute; bottom: -20px; left: 50%; transform: translateX(-50%);
+  font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em;
+}
+
+/* Score bars */
+.score-bars { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin: 24px 0; }
+.score-bar { text-align: center; }
+.score-bar-label { font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 8px; }
+.score-bar-label.pos-label { color: var(--green); }
+.score-bar-label.neg-label { color: var(--red); }
+.score-bar-label.neu-label { color: var(--amber); }
+.score-bar-track { height: 8px; background: var(--bg-main); border-radius: 4px; overflow: hidden; }
+.score-bar-fill { height: 100%; border-radius: 4px; transition: width 1.2s var(--ease); width: 0; }
+.score-bar-fill.pos-fill { background: linear-gradient(90deg, #34D399, var(--green)); }
+.score-bar-fill.neg-fill { background: linear-gradient(90deg, #F87171, var(--red)); }
+.score-bar-fill.neu-fill { background: linear-gradient(90deg, #FCD34D, var(--amber)); }
+.score-bar-value {
+  font-family: var(--font-heading); font-weight: 700; font-size: 1.2rem;
+  margin-top: 6px;
+}
+
+/* Word highlighting */
+.word-highlight-box {
+  padding: 20px; background: var(--bg-main); border-radius: var(--radius-sm);
+  border: 1px solid var(--border); line-height: 2.4; margin: 20px 0;
+}
+.word-pos { background: var(--green-light); color: #065F46; padding: 3px 8px; border-radius: 6px; border-bottom: 2px solid var(--green); font-weight: 500; }
+.word-neg { background: var(--red-light); color: #991B1B; padding: 3px 8px; border-radius: 6px; border-bottom: 2px solid var(--red); font-weight: 500; }
+.word-neu { color: var(--text-secondary); }
+
+.result-actions { display: flex; gap: 10px; margin-top: 24px; flex-wrap: wrap; }
+
+/* Model comparison */
+.model-compare { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px,1fr)); gap: 12px; margin: 20px 0; }
+.model-card-v2 {
+  padding: 20px; background: var(--bg-main); border-radius: var(--radius-sm);
+  border: 1px solid var(--border); position: relative; overflow: hidden;
+}
+.model-card-v2::before { content:''; position: absolute; top: 0; left: 0; right: 0; height: 3px; }
+.model-card-v2.vader-c::before { background: linear-gradient(90deg, var(--purple), #A78BFA); }
+.model-card-v2.textblob-c::before { background: linear-gradient(90deg, var(--cyan), #67E8F9); }
+.model-card-v2.bert-c::before { background: linear-gradient(90deg, var(--pink), #F9A8D4); }
+.model-card-v2 .mc-name { font-family: var(--font-heading); font-weight: 700; font-size: 0.9rem; margin-bottom: 8px; color: var(--text-primary); }
+.mc-badge { display: inline-block; padding: 4px 12px; border-radius: 8px; font-size: 0.78rem; font-weight: 600; text-transform: uppercase; }
+.mc-badge.positive { background: var(--green-light); color: #065F46; }
+.mc-badge.negative { background: var(--red-light); color: #991B1B; }
+.mc-badge.neutral { background: var(--amber-light); color: #92400E; }
+.model-card-v2 .mc-conf { font-size: 0.8rem; color: var(--text-muted); margin-top: 8px; }
+
+/* ─── How It Works ────────────────────────────────────────── */
+#how-it-works { background: var(--bg-pink); }
+.steps-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+.step-card {
+  padding: 32px 24px; border-radius: var(--radius); text-align: center;
+  position: relative; transition: all 300ms var(--ease);
+  border: 1px solid transparent;
+}
+.step-card:hover { transform: translateY(-4px); }
+.step-card.purple-card { background: var(--purple-light); }
+.step-card.pink-card { background: var(--pink-light); }
+.step-card.cyan-card { background: var(--cyan-light); }
+.step-card.green-card { background: var(--green-light); }
+.step-number {
+  width: 32px; height: 32px; border-radius: 50%; display: flex;
+  align-items: center; justify-content: center;
+  font-family: var(--font-heading); font-weight: 800; font-size: 0.85rem;
+  margin: 0 auto 16px; color: #fff;
+}
+.purple-card .step-number { background: var(--purple); }
+.pink-card .step-number { background: var(--pink); }
+.cyan-card .step-number { background: var(--cyan); }
+.green-card .step-number { background: var(--green); }
+.step-card .step-icon { font-size: 2rem; margin-bottom: 12px; }
+.step-card h3 { font-family: var(--font-heading); font-size: 1rem; font-weight: 700; margin-bottom: 8px; color: var(--text-primary); }
+.step-card p { font-size: 0.85rem; color: var(--text-secondary); }
+
+/* ─── Dashboard ───────────────────────────────────────────── */
+#dashboard { background: var(--bg-mint); }
+.stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px,1fr)); gap: 16px; margin-bottom: 32px; }
+.stat-card {
+  padding: 24px; text-align: center; background: var(--bg-card);
+  border-radius: var(--radius); box-shadow: var(--shadow);
+  border: 1px solid var(--border); transition: all 300ms var(--ease);
+}
+.stat-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); }
+.stat-icon {
+  width: 48px; height: 48px; border-radius: 14px; display: flex;
+  align-items: center; justify-content: center; margin: 0 auto 12px; font-size: 1.3rem;
+}
+.stat-icon.total { background: var(--purple-light); color: var(--purple); }
+.stat-icon.pos { background: var(--green-light); color: var(--green); }
+.stat-icon.neg { background: var(--red-light); color: var(--red); }
+.stat-icon.neu { background: var(--amber-light); color: var(--amber); }
+.stat-value { font-family: var(--font-heading); font-size: 2rem; font-weight: 800; color: var(--text-primary); }
+.stat-label { font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em; margin-top: 4px; }
+
+.charts-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+.chart-card {
+  padding: 24px; background: var(--bg-card); border-radius: var(--radius);
+  box-shadow: var(--shadow); border: 1px solid var(--border);
+}
+.chart-card h3 {
+  font-family: var(--font-heading); font-size: 1rem; font-weight: 700;
+  margin-bottom: 16px; display: flex; align-items: center; gap: 8px;
+  color: var(--text-primary);
+}
+.chart-card canvas { max-height: 280px; }
+
+/* ─── History ─────────────────────────────────────────────── */
+#history { background: var(--bg-pink); }
+.history-controls { display: flex; gap: 12px; margin-bottom: 20px; flex-wrap: wrap; align-items: center; }
+.filter-pills { display: flex; gap: 6px; flex-wrap: wrap; }
+.filter-pill {
+  padding: 6px 14px; border-radius: 20px; font-size: 0.8rem; font-weight: 600;
+  background: var(--bg-card); border: 1px solid var(--border);
+  color: var(--text-secondary); cursor: pointer; transition: all 200ms var(--ease);
+}
+.filter-pill:hover { color: var(--purple); border-color: var(--purple); }
+.filter-pill.active { background: var(--purple); border-color: var(--purple); color: #fff; }
+.search-input {
+  flex: 1; min-width: 200px; padding: 8px 14px; background: var(--bg-card);
+  border: 1px solid var(--border); border-radius: 10px; color: var(--text-primary);
+  font-family: var(--font-body); font-size: 0.85rem; outline: none;
+}
+.search-input:focus { border-color: var(--purple); }
+.history-feed { display: flex; flex-direction: column; gap: 10px; }
+.history-item {
+  display: grid; grid-template-columns: auto 1fr auto auto auto auto; gap: 12px;
+  align-items: center; padding: 14px 20px; font-size: 0.85rem;
+  background: var(--bg-card); border-radius: var(--radius-sm);
+  box-shadow: 0 2px 8px rgba(124,58,237,0.06); border: 1px solid var(--border);
+  transition: all 200ms var(--ease);
+}
+.history-item:hover { box-shadow: var(--shadow); }
+.hi-platform { font-size: 1.1rem; }
+.hi-text { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--text-primary); font-weight: 500; }
+.hi-badge { padding: 4px 12px; border-radius: 8px; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; }
+.hi-badge.positive { background: var(--green-light); color: #065F46; }
+.hi-badge.negative { background: var(--red-light); color: #991B1B; }
+.hi-badge.neutral { background: var(--amber-light); color: #92400E; }
+.hi-meta { font-size: 0.75rem; color: var(--text-muted); white-space: nowrap; }
+.hi-conf { font-family: var(--font-heading); font-size: 0.85rem; font-weight: 700; color: var(--text-secondary); }
+.hi-reanalyze {
+  padding: 4px 10px; border-radius: 8px; font-size: 0.72rem; font-weight: 600;
+  background: var(--purple-light); color: var(--purple); border: none;
+  cursor: pointer; transition: all 200ms var(--ease);
+}
+.hi-reanalyze:hover { background: var(--purple); color: #fff; }
+.load-more-btn {
+  display: block; margin: 20px auto 0; padding: 10px 32px;
+  background: var(--bg-card); border: 2px solid var(--border); border-radius: var(--radius-sm);
+  color: var(--purple); font-weight: 600; cursor: pointer; transition: all 200ms var(--ease);
+}
+.load-more-btn:hover { border-color: var(--purple); background: var(--purple-light); }
+
+.empty-state { text-align: center; padding: 60px 20px; color: var(--text-muted); }
+.empty-state i { font-size: 3rem; margin-bottom: 16px; opacity: 0.4; display: block; }
+.empty-state p { font-size: 0.95rem; }
+
+/* ─── Platform Support ────────────────────────────────────── */
+#platforms { background: var(--bg-warm); }
+.platform-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; }
+.platform-card {
+  padding: 28px 20px; text-align: center; background: var(--bg-card);
+  border-radius: var(--radius); box-shadow: var(--shadow);
+  border: 1px solid var(--border); transition: all 300ms var(--ease);
+}
+.platform-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); }
+.platform-card .p-icon { font-size: 2.5rem; margin-bottom: 12px; }
+.platform-card .p-name { font-family: var(--font-heading); font-weight: 700; font-size: 1rem; margin-bottom: 6px; }
+.platform-card .p-status {
+  display: inline-block; padding: 4px 12px; border-radius: 20px;
+  font-size: 0.72rem; font-weight: 600; margin-bottom: 8px;
+}
+.p-status.full { background: var(--green-light); color: #065F46; }
+.p-status.fallback { background: var(--amber-light); color: #92400E; }
+.platform-card .p-desc { font-size: 0.8rem; color: var(--text-secondary); }
+
+/* ─── About / Tech Stack ─────────────────────────────────── */
+#about { background: var(--bg-main); }
+.model-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 32px; }
+.model-info-card {
+  padding: 28px; background: var(--bg-card); border-radius: var(--radius);
+  box-shadow: var(--shadow); border: 1px solid var(--border);
+  position: relative; overflow: hidden;
+}
+.model-info-card::before { content:''; position: absolute; top: 0; left: 0; right: 0; height: 3px; }
+.model-info-card.vader-card::before { background: var(--purple); }
+.model-info-card.textblob-card::before { background: var(--cyan); }
+.model-info-card.bert-card::before { background: var(--pink); }
+.model-info-card h3 { font-family: var(--font-heading); font-weight: 700; font-size: 1.1rem; margin-bottom: 8px; }
+.model-info-card p { font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 12px; }
+.accuracy-badge {
+  display: inline-block; padding: 4px 12px; border-radius: 20px;
+  font-size: 0.75rem; font-weight: 700; background: var(--green-light); color: #065F46;
+}
+.tech-pills { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; margin-top: 24px; }
+.tech-pill {
+  padding: 8px 18px; border-radius: 20px; font-size: 0.8rem; font-weight: 600;
+  background: var(--bg-card); box-shadow: var(--shadow); border: 1px solid var(--border);
+  color: var(--text-primary); transition: all 200ms var(--ease);
+}
+.tech-pill:hover { transform: translateY(-2px); box-shadow: var(--shadow-lg); color: var(--purple); }
+
+/* ─── Upload Zone ─────────────────────────────────────────── */
+.upload-zone {
+  border: 2px dashed var(--border); border-radius: var(--radius);
+  padding: 40px; text-align: center; cursor: pointer; transition: all 300ms var(--ease);
+  position: relative; overflow: hidden; display: none; margin-top: 16px;
+}
+.upload-zone.visible { display: block; animation: fadeIn 0.3s var(--ease); }
+.upload-zone.dragover { border-color: var(--purple); background: var(--purple-light); }
+.upload-zone input { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
+.upload-zone i { font-size: 2rem; color: var(--text-muted); margin-bottom: 12px; }
+.upload-zone p { color: var(--text-secondary); }
+
+/* ─── Fallback UI ─────────────────────────────────────────── */
+.fallback-card {
+  display: none; max-width: 800px; margin: 32px auto 0; padding: 40px;
+  background: var(--bg-card); border-radius: var(--radius);
+  box-shadow: var(--shadow); border: 1px solid var(--border);
+  text-align: center; animation: fadeIn 0.3s var(--ease);
+}
+.fallback-card.visible { display: block; }
+.fallback-card .fallback-icon { font-size: 3rem; margin-bottom: 16px; }
+.fallback-card h3 { font-family: var(--font-heading); font-weight: 700; font-size: 1.2rem; margin-bottom: 8px; }
+.fallback-card p { color: var(--text-secondary); margin-bottom: 20px; max-width: 400px; margin-left: auto; margin-right: auto; }
+
+/* ─── Footer ──────────────────────────────────────────────── */
+footer {
+  background: linear-gradient(135deg, var(--purple), var(--pink));
+  color: rgba(255,255,255,0.9); padding: 48px 0 32px; text-align: center;
+}
+footer .footer-brand {
+  font-family: var(--font-heading); font-weight: 800; font-size: 1.5rem;
+  color: #fff; margin-bottom: 8px;
+}
+footer .footer-tagline { color: rgba(255,255,255,0.7); font-size: 0.9rem; margin-bottom: 24px; }
+footer .footer-links { display: flex; gap: 24px; justify-content: center; margin-bottom: 24px; flex-wrap: wrap; }
+footer .footer-links a { color: rgba(255,255,255,0.8); text-decoration: none; font-size: 0.85rem; font-weight: 500; transition: color 200ms var(--ease); }
+footer .footer-links a:hover { color: #fff; }
+footer .footer-copy { color: rgba(255,255,255,0.5); font-size: 0.8rem; }
+
+/* ─── Section Titles ──────────────────────────────────────── */
+.section-title {
+  font-family: var(--font-heading); font-size: 2rem; font-weight: 800;
+  margin-bottom: 8px; color: var(--text-primary);
+  display: flex; align-items: center; gap: 12px;
+}
+.section-subtitle { color: var(--text-secondary); font-size: 1rem; margin-bottom: 40px; }
+
+/* ─── Toast ───────────────────────────────────────────────── */
+.toast-container { position: fixed; bottom: 24px; right: 24px; z-index: 9999; display: flex; flex-direction: column; gap: 8px; }
+.toast {
+  padding: 14px 24px; border-radius: var(--radius-sm); font-size: 0.85rem;
+  display: flex; align-items: center; gap: 10px; min-width: 280px;
+  background: var(--bg-card); border: 1px solid var(--border);
+  box-shadow: var(--shadow-lg); animation: toastIn 0.4s var(--ease);
+  color: var(--text-primary); font-weight: 500;
+}
+.toast.success { border-left: 4px solid var(--green); }
+.toast.error { border-left: 4px solid var(--red); }
+.toast.info { border-left: 4px solid var(--cyan); }
+.toast.removing { animation: toastOut 0.3s ease-in forwards; }
+@keyframes toastIn { from{opacity:0;transform:translateX(100%)} to{opacity:1;transform:translateX(0)} }
+@keyframes toastOut { from{opacity:1} to{opacity:0;transform:translateX(100%)} }
+
+/* ─── Modal ───────────────────────────────────────────────── */
+.modal-overlay { position: fixed; inset: 0; background: rgba(30,27,75,0.4); backdrop-filter: blur(4px); z-index: 200; display: none; align-items: center; justify-content: center; }
+.modal-overlay.visible { display: flex; }
+.modal {
+  background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius);
+  padding: 32px; max-width: 400px; width: 90%; text-align: center; box-shadow: var(--shadow-lg);
+}
+.modal h3 { font-family: var(--font-heading); font-weight: 700; margin-bottom: 12px; color: var(--text-primary); }
+.modal p { color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 24px; }
+.modal-actions { display: flex; gap: 12px; justify-content: center; }
+
+/* Bulk Results */
+#bulkResults { display: none; max-width: 800px; margin: 24px auto 0; }
+#bulkResults.visible { display: block; animation: slideUp 0.5s var(--ease); }
+
+/* ─── Responsive ──────────────────────────────────────────── */
+@media(max-width: 1024px) {
+  .charts-grid { grid-template-columns: 1fr 1fr; }
+}
+@media(max-width: 768px) {
+  .nav-links { display: none; }
+  .hamburger { display: block; }
+  .hero-content h1 { font-size: 2.5rem; }
+  .steps-grid { grid-template-columns: repeat(2, 1fr); }
+  .charts-grid { grid-template-columns: 1fr; }
+  .model-cards { grid-template-columns: 1fr; }
+  .history-item { grid-template-columns: auto 1fr auto; gap: 8px; }
+  .history-item .hi-meta, .history-item .hi-conf, .history-item .hi-reanalyze { display: none; }
+  .url-input-group { flex-direction: column; }
+  .model-compare { grid-template-columns: 1fr; }
+  .score-bars { grid-template-columns: 1fr; }
+}
+@media(max-width: 480px) {
+  .hero-content h1 { font-size: 2rem; }
+  .steps-grid { grid-template-columns: 1fr; }
+  .stats-grid { grid-template-columns: repeat(2, 1fr); }
+  .stats-bar { gap: 16px; padding: 16px 20px; }
+  .platform-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media(prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}
+</style>
+</head>
+<body>
+<!-- Toast Container -->
+<div class="toast-container" id="toasts"></div>
+
+<!-- Confirm Modal -->
+<div class="modal-overlay" id="confirmModal">
+  <div class="modal">
+    <h3>🗑️ Clear All History?</h3>
+    <p>This will permanently delete all your saved analyses. This action cannot be undone.</p>
+    <div class="modal-actions">
+      <button class="btn btn-secondary" onclick="closeModal()" style="padding:10px 20px;">Cancel</button>
+      <button class="btn btn-danger" onclick="confirmClearHistory()" style="padding:10px 20px;"><i class="fas fa-trash"></i> Delete All</button>
+    </div>
+  </div>
+</div>
+
+<!-- Mobile Menu -->
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#analyzer" onclick="closeMobile()">🔍 Analyzer</a>
+  <a href="#how-it-works" onclick="closeMobile()">⚡ How It Works</a>
+  <a href="#dashboard" onclick="closeMobile()">📊 Dashboard</a>
+  <a href="#history" onclick="closeMobile()">📜 History</a>
+  <a href="#platforms" onclick="closeMobile()">🌐 Platforms</a>
+  <a href="#about" onclick="closeMobile()">ℹ️ About</a>
+</div>
+
+<!-- ═══ NAVIGATION ═══ -->
+<nav class="nav" id="mainNav">
+  <div class="container">
+    <a class="nav-brand" href="#hero">✨ <span class="logo-text">SentimentAI</span></a>
+    <div class="nav-links">
+      <a href="#analyzer" data-section="analyzer">Analyzer</a>
+      <a href="#dashboard" data-section="dashboard">Dashboard</a>
+      <a href="#history" data-section="history">History</a>
+      <a href="#about" data-section="about">About</a>
+      <a href="#analyzer" class="nav-cta">Try Free</a>
+    </div>
+    <button class="hamburger" id="hamburgerBtn" onclick="toggleMobile()"><i class="fas fa-bars"></i></button>
+  </div>
+</nav>
+
+<!-- ═══ SECTION 1: HERO ═══ -->
+<section id="hero">
+  <div class="gradient-mesh">
+    <div class="mesh-3"></div>
+  </div>
+  <div class="container">
+    <div class="hero-content">
+      <h1>Understand Any Post.<br><span class="gradient">Instantly.</span></h1>
+      <p class="subtitle">Paste a tweet link, Instagram post, Reddit thread or YouTube comment — we decode the emotion behind it.</p>
+      <div class="hero-buttons">
+        <a href="#analyzer" class="btn btn-primary"><i class="fas fa-link"></i> Analyze a Link →</a>
+        <a href="#analyzer" class="btn btn-secondary" onclick="setTimeout(()=>switchTab('text'),300)"><i class="fas fa-pen"></i> Paste Text Instead</a>
+      </div>
+      <div class="stats-bar">
+        <div class="stat"><div class="stat-num" id="heroTotal">2.4M</div><div class="stat-lbl">Posts Analyzed</div></div>
+        <div class="stat"><div class="stat-num">94%</div><div class="stat-lbl">Accuracy</div></div>
+        <div class="stat"><div class="stat-num">6</div><div class="stat-lbl">Platforms Supported</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ SECTION 2: MAIN ANALYZER ═══ -->
+<section id="analyzer">
+  <div class="container">
+    <h2 class="section-title" style="justify-content:center;">🔬 Sentiment Analyzer</h2>
+    <p class="section-subtitle" style="text-align:center;">Analyze any social media post by URL or paste text directly.</p>
+
+    <div class="analyzer-card">
+      <div class="tab-bar">
+        <button class="tab-btn active" data-tab="url" onclick="switchTab('url')">🔗 Analyze by URL</button>
+        <button class="tab-btn" data-tab="text" onclick="switchTab('text')">✏️ Paste Text</button>
+      </div>
+
+      <!-- URL Tab -->
+      <div class="tab-panel active" id="tab-url">
+        <div class="url-input-group">
+          <input type="url" id="urlInput" placeholder="https://twitter.com/... or reddit.com/r/..." autocomplete="off">
+          <button class="btn btn-primary" id="urlAnalyzeBtn" onclick="analyzeUrl()" style="white-space:nowrap;">
+            <i class="fas fa-bolt"></i> GO →
+          </button>
+        </div>
+        <div class="platform-badges">
+          <span class="platform-badge" style="background:#E8F4FD;color:#1DA1F2;">🐦 Twitter/X</span>
+          <span class="platform-badge" style="background:#FFF0F0;color:#FF4500;">👽 Reddit</span>
+          <span class="platform-badge" style="background:#FFF0F0;color:#FF0000;">💬 YouTube</span>
+          <span class="platform-badge" style="background:#FCE7F3;color:#E1306C;">📸 Instagram</span>
+          <span class="platform-badge" style="background:#EFF6FF;color:#1877F2;">📘 Facebook</span>
+          <span class="platform-badge" style="background:#EFF6FF;color:#0A66C2;">💼 LinkedIn</span>
+        </div>
+      </div>
+
+      <!-- Text Tab -->
+      <div class="tab-panel" id="tab-text">
+        <textarea class="text-input-area" id="textInput" placeholder="Paste your tweet, post, or any text here..." maxlength="5000"></textarea>
+        <div class="input-footer">
+          <span class="char-counter" id="charCounter">0 / 5,000</span>
+          <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
+            <select class="model-select" id="modelSelect">
+              <option value="vader">🧪 VADER</option>
+              <option value="textblob">📊 TextBlob</option>
+              <option value="bert">🤖 BERT (RoBERTa)</option>
+              <option value="all">⚡ All Models</option>
+            </select>
+            <button class="btn btn-primary" id="analyzeBtn" onclick="analyzeText()">
+              <i class="fas fa-bolt"></i> Analyze
+            </button>
+            <button class="btn btn-secondary" id="uploadToggle" onclick="toggleUpload()" style="padding:12px 18px;">
+              <i class="fas fa-arrow-up-from-bracket"></i> CSV
+            </button>
+          </div>
+        </div>
+        <div class="upload-zone" id="uploadZone">
+          <input type="file" id="csvInput" accept=".csv">
+          <i class="fas fa-cloud-arrow-up"></i>
+          <p>Drag & drop CSV here, or <strong>click to browse</strong></p>
+          <p style="font-size:0.78rem;color:var(--text-muted);margin-top:8px;">CSV needs a "text" column • Max 10,000 rows</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Loading Card -->
+    <div class="loading-card" id="loadingCard">
+      <div class="platform-icon" id="loadingPlatformIcon"></div>
+      <div class="loading-spinner"></div>
+      <div class="loading-text" id="loadingText">Fetching post...</div>
+    </div>
+
+    <!-- Fallback Card (for unsupported platforms) -->
+    <div class="fallback-card" id="fallbackCard">
+      <div class="fallback-icon" id="fallbackIcon">📸</div>
+      <h3 id="fallbackTitle">Instagram Requires Authentication</h3>
+      <p id="fallbackMsg">This platform requires a login to access posts. Please copy the post text and use the "Paste Text" tab instead.</p>
+      <button class="btn btn-primary" onclick="switchTab('text');document.getElementById('fallbackCard').classList.remove('visible');">
+        <i class="fas fa-pen"></i> Switch to Text Mode
+      </button>
+    </div>
+
+    <!-- Result Card -->
+    <div id="result-section">
+      <div class="result-card" id="resultsCard">
+        <div id="platformBadgeArea"></div>
+        <div id="quoteBoxArea"></div>
+        <div class="result-header">
+          <span class="result-emoji" id="resultEmoji">😐</span>
+          <span class="result-label" id="resultLabel">NEUTRAL</span>
+        </div>
+
+        <!-- Arc Gauge -->
+        <div class="arc-gauge-container">
+          <div class="arc-gauge">
+            <svg viewBox="0 0 200 110">
+              <path class="arc-bg" d="M20,100 A80,80 0 0,1 180,100" />
+              <path class="arc-fill" id="arcFill" d="M20,100 A80,80 0 0,1 180,100" stroke-dasharray="251.2" stroke-dashoffset="251.2" />
+            </svg>
+            <div class="arc-value" id="arcValue">0%</div>
+            <div class="arc-label">Confidence</div>
+          </div>
+        </div>
+
+        <!-- Score Bars -->
+        <div class="score-bars">
+          <div class="score-bar">
+            <div class="score-bar-label pos-label">Positive</div>
+            <div class="score-bar-track"><div class="score-bar-fill pos-fill" id="posBar"></div></div>
+            <div class="score-bar-value" id="posVal" style="color:var(--green);">0%</div>
+          </div>
+          <div class="score-bar">
+            <div class="score-bar-label neg-label">Negative</div>
+            <div class="score-bar-track"><div class="score-bar-fill neg-fill" id="negBar"></div></div>
+            <div class="score-bar-value" id="negVal" style="color:var(--red);">0%</div>
+          </div>
+          <div class="score-bar">
+            <div class="score-bar-label neu-label">Neutral</div>
+            <div class="score-bar-track"><div class="score-bar-fill neu-fill" id="neuBar"></div></div>
+            <div class="score-bar-value" id="neuVal" style="color:var(--amber);">0%</div>
+          </div>
+        </div>
+
+        <!-- Word Highlighting -->
+        <h4 style="font-family:var(--font-heading);font-weight:700;margin:20px 0 10px;font-size:0.95rem;color:var(--text-primary);">
+          <i class="fas fa-highlighter" style="color:var(--purple);"></i> Word-Level Analysis
+        </h4>
+        <div class="word-highlight-box" id="wordHighlight"></div>
+
+        <!-- Model Comparison -->
+        <div id="modelCompare" class="model-compare"></div>
+
+        <!-- Actions -->
+        <div class="result-actions">
+          <button class="btn btn-secondary" onclick="copyResult()" style="padding:10px 18px;font-size:0.85rem;"><i class="fas fa-copy"></i> Copy Result</button>
+          <button class="btn btn-secondary" onclick="shareResult()" style="padding:10px 18px;font-size:0.85rem;"><i class="fas fa-share-nodes"></i> Share</button>
+          <button class="btn btn-primary" onclick="resetAnalyzer()" style="padding:10px 18px;font-size:0.85rem;"><i class="fas fa-plus"></i> Analyze Another</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bulk Results -->
+    <div id="bulkResults">
+      <div class="stats-grid" id="bulkStats"></div>
+      <div class="card" style="padding:24px;max-height:400px;overflow-y:auto;" id="bulkTable"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ SECTION 3: HOW IT WORKS ═══ -->
+<section id="how-it-works">
+  <div class="container">
+    <h2 class="section-title" style="justify-content:center;">⚡ How It Works</h2>
+    <p class="section-subtitle" style="text-align:center;">Four simple steps to decode the emotion behind any post.</p>
+    <div class="steps-grid">
+      <div class="step-card purple-card">
+        <div class="step-number">1</div>
+        <div class="step-icon">🔗</div>
+        <h3>Paste Link</h3>
+        <p>Drop any social media post URL — tweets, Reddit threads, YouTube videos.</p>
+      </div>
+      <div class="step-card pink-card">
+        <div class="step-number">2</div>
+        <div class="step-icon">🤖</div>
+        <h3>AI Extracts Text</h3>
+        <p>Our system automatically fetches the post content using free platform APIs.</p>
+      </div>
+      <div class="step-card cyan-card">
+        <div class="step-number">3</div>
+        <div class="step-icon">🧠</div>
+        <h3>NLP Analysis</h3>
+        <p>VADER, TextBlob, or BERT analyze the sentiment at word and sentence level.</p>
+      </div>
+      <div class="step-card green-card">
+        <div class="step-number">4</div>
+        <div class="step-icon">📊</div>
+        <h3>Get Results</h3>
+        <p>See confidence scores, word highlighting, and beautiful visualizations instantly.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ SECTION 4: DASHBOARD ═══ -->
+<section id="dashboard">
+  <div class="container">
+    <h2 class="section-title"><i class="fas fa-chart-pie" style="color:var(--purple);"></i> Live Analytics</h2>
+    <p class="section-subtitle">Aggregate insights from all your analyses in real-time.</p>
+    <div class="stats-grid" id="dashStats">
+      <div class="stat-card"><div class="stat-icon total"><i class="fas fa-chart-bar"></i></div><div class="stat-value" id="sTotal">0</div><div class="stat-label">Total Analyzed</div></div>
+      <div class="stat-card"><div class="stat-icon pos"><i class="fas fa-face-smile"></i></div><div class="stat-value" id="sPos">0%</div><div class="stat-label">Positive</div></div>
+      <div class="stat-card"><div class="stat-icon neg"><i class="fas fa-face-frown"></i></div><div class="stat-value" id="sNeg">0%</div><div class="stat-label">Negative</div></div>
+      <div class="stat-card"><div class="stat-icon neu"><i class="fas fa-face-meh"></i></div><div class="stat-value" id="sNeu">0%</div><div class="stat-label">Neutral</div></div>
+    </div>
+    <div class="charts-grid">
+      <div class="chart-card"><h3><i class="fas fa-chart-pie" style="color:var(--purple);"></i> Sentiment Split</h3><canvas id="doughnutChart"></canvas></div>
+      <div class="chart-card"><h3><i class="fas fa-chart-column" style="color:var(--pink);"></i> By Platform</h3><canvas id="platformChart"></canvas></div>
+      <div class="chart-card"><h3><i class="fas fa-chart-line" style="color:var(--cyan);"></i> Trend</h3><canvas id="trendChart"></canvas></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ SECTION 5: HISTORY ═══ -->
+<section id="history">
+  <div class="container">
+    <h2 class="section-title"><i class="fas fa-clock-rotate-left" style="color:var(--purple);"></i> History</h2>
+    <p class="section-subtitle">Your recent sentiment analyses with platform tracking.</p>
+    <div class="history-controls">
+      <div class="filter-pills">
+        <button class="filter-pill active" data-filter="all" onclick="filterHistory('all',this)">All</button>
+        <button class="filter-pill" data-filter="twitter" onclick="filterHistory('twitter',this)">🐦 Twitter</button>
+        <button class="filter-pill" data-filter="reddit" onclick="filterHistory('reddit',this)">👽 Reddit</button>
+        <button class="filter-pill" data-filter="youtube" onclick="filterHistory('youtube',this)">💬 YouTube</button>
+        <button class="filter-pill" data-filter="positive" onclick="filterHistory('positive',this)">😊 Positive</button>
+        <button class="filter-pill" data-filter="negative" onclick="filterHistory('negative',this)">😠 Negative</button>
+        <button class="filter-pill" data-filter="neutral" onclick="filterHistory('neutral',this)">😐 Neutral</button>
+      </div>
+      <input class="search-input" id="historySearch" placeholder="Search analyses..." oninput="searchHistory()">
+      <button class="btn btn-danger" style="font-size:0.8rem;padding:8px 14px;" onclick="showClearModal()"><i class="fas fa-trash"></i> Clear All</button>
+    </div>
+    <div class="history-feed" id="historyFeed">
+      <div class="empty-state" id="historyEmpty"><i class="fas fa-inbox"></i><p>No analyses yet — try pasting a link above!</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ SECTION 6: PLATFORM SUPPORT ═══ -->
+<section id="platforms">
+  <div class="container">
+    <h2 class="section-title" style="justify-content:center;">🌐 Works With Your Favorite Platforms</h2>
+    <p class="section-subtitle" style="text-align:center;">Direct URL analysis for supported platforms. Text fallback for the rest.</p>
+    <div class="platform-grid">
+      <div class="platform-card">
+        <div class="p-icon">🐦</div>
+        <div class="p-name" style="color:#1DA1F2;">Twitter / X</div>
+        <div class="p-status full">✅ Full Support</div>
+        <div class="p-desc">Tweet text extracted via oEmbed API. Works with any public tweet.</div>
+      </div>
+      <div class="platform-card">
+        <div class="p-icon">👽</div>
+        <div class="p-name" style="color:#FF4500;">Reddit</div>
+        <div class="p-status full">✅ Full Support</div>
+        <div class="p-desc">Post title and body via public JSON API. Works with any public post.</div>
+      </div>
+      <div class="platform-card">
+        <div class="p-icon">💬</div>
+        <div class="p-name" style="color:#FF0000;">YouTube</div>
+        <div class="p-status full">✅ Full Support</div>
+        <div class="p-desc">Video title extracted via oEmbed API. Great for analyzing video topics.</div>
+      </div>
+      <div class="platform-card">
+        <div class="p-icon">📸</div>
+        <div class="p-name" style="color:#E1306C;">Instagram</div>
+        <div class="p-status fallback">⚠️ Text Fallback</div>
+        <div class="p-desc">Requires login. Copy-paste the caption text for analysis instead.</div>
+      </div>
+      <div class="platform-card">
+        <div class="p-icon">📘</div>
+        <div class="p-name" style="color:#1877F2;">Facebook</div>
+        <div class="p-status fallback">⚠️ Text Fallback</div>
+        <div class="p-desc">Requires login. Copy-paste the post text for analysis instead.</div>
+      </div>
+      <div class="platform-card">
+        <div class="p-icon">💼</div>
+        <div class="p-name" style="color:#0A66C2;">LinkedIn</div>
+        <div class="p-status fallback">⚠️ Text Fallback</div>
+        <div class="p-desc">Requires login. Copy-paste the post text for analysis instead.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ SECTION 7: ABOUT / TECH STACK ═══ -->
+<section id="about">
+  <div class="container">
+    <h2 class="section-title" style="justify-content:center;">🧠 How the NLP Works</h2>
+    <p class="section-subtitle" style="text-align:center;">Three powerful models, each with unique strengths for sentiment analysis.</p>
+    <div class="model-cards">
+      <div class="model-info-card vader-card">
+        <h3>🧪 VADER</h3>
+        <p>Rule-based sentiment analyzer specifically tuned for social media. Handles emojis, slang, and emphasis (ALL CAPS, punctuation!!!).</p>
+        <span class="accuracy-badge">~87% Accuracy</span>
+      </div>
+      <div class="model-info-card textblob-card">
+        <h3>📊 TextBlob</h3>
+        <p>Pattern-based analysis using a pre-trained dictionary. Returns both polarity (sentiment) and subjectivity scores.</p>
+        <span class="accuracy-badge">~82% Accuracy</span>
+      </div>
+      <div class="model-info-card bert-card">
+        <h3>🤖 BERT (RoBERTa)</h3>
+        <p>Deep learning model fine-tuned on Twitter data. Captures context and nuance that rule-based models miss. Falls back to VADER if unavailable.</p>
+        <span class="accuracy-badge">~94% Accuracy</span>
+      </div>
+    </div>
+
+    <h3 style="font-family:var(--font-heading);font-weight:700;text-align:center;margin-bottom:16px;font-size:1.2rem;">Tech Stack</h3>
+    <div class="tech-pills">
+      <span class="tech-pill">🐍 Python</span>
+      <span class="tech-pill">🌶️ Flask</span>
+      <span class="tech-pill">📖 NLTK</span>
+      <span class="tech-pill">📝 TextBlob</span>
+      <span class="tech-pill">🤗 HuggingFace</span>
+      <span class="tech-pill">📊 Chart.js</span>
+      <span class="tech-pill">🗃️ SQLite</span>
+      <span class="tech-pill">🔗 oEmbed APIs</span>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ FOOTER ═══ -->
+<footer>
+  <div class="container">
+    <div class="footer-brand">✨ SentimentAI</div>
+    <div class="footer-tagline">Understand any post. Instantly.</div>
+    <div class="footer-links">
+      <a href="#analyzer"><i class="fas fa-bolt"></i> Analyzer</a>
+      <a href="#dashboard"><i class="fas fa-chart-pie"></i> Dashboard</a>
+      <a href="#history"><i class="fas fa-clock-rotate-left"></i> History</a>
+      <a href="#about"><i class="fas fa-info-circle"></i> About</a>
+    </div>
+    <div class="footer-copy">Built with ❤️ and NLP • SentimentAI © 2024</div>
+  </div>
+</footer>
+
+<script>
+/* ═══════════════════════════════════════════════════════════════
+   SentimentAI — Frontend Application Logic (Vibrant Edition)
+   ═══════════════════════════════════════════════════════════════ */
+
+// ─── State ───────────────────────────────────────────────────
+let lastResult = null;
+let allHistory = [];
+let currentFilter = 'all';
+let charts = { doughnut: null, trend: null, platform: null };
+let historyLimit = 20;
+
+// ─── Platform Meta ───────────────────────────────────────────
+const PLATFORM_COLORS = {
+  twitter: '#1DA1F2', reddit: '#FF4500', youtube: '#FF0000',
+  instagram: '#E1306C', facebook: '#1877F2', linkedin: '#0A66C2'
+};
+const PLATFORM_EMOJIS = {
+  twitter: '🐦', reddit: '👽', youtube: '💬',
+  instagram: '📸', facebook: '📘', linkedin: '💼'
+};
+
+// ─── Nav scroll effect ───────────────────────────────────────
+window.addEventListener('scroll', () => {
+  document.getElementById('mainNav').classList.toggle('scrolled', window.scrollY > 50);
+});
+
+// ─── Mobile Menu ─────────────────────────────────────────────
+function toggleMobile() {
+  const menu = document.getElementById('mobileMenu');
+  menu.classList.toggle('open');
+  const btn = document.getElementById('hamburgerBtn');
+  btn.innerHTML = menu.classList.contains('open') ? '<i class="fas fa-times"></i>' : '<i class="fas fa-bars"></i>';
+}
+function closeMobile() {
+  document.getElementById('mobileMenu').classList.remove('open');
+  document.getElementById('hamburgerBtn').innerHTML = '<i class="fas fa-bars"></i>';
+}
+
+// ─── Tab Switching ───────────────────────────────────────────
+function switchTab(tab) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === tab));
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.getElementById('tab-' + tab).classList.add('active');
+}
+
+// ─── Character Counter ───────────────────────────────────────
+const textInput = document.getElementById('textInput');
+const charCounter = document.getElementById('charCounter');
+textInput.addEventListener('input', () => {
+  const len = textInput.value.length;
+  charCounter.textContent = `${len.toLocaleString()} / 5,000`;
+  charCounter.className = 'char-counter' + (len > 4500 ? ' danger' : (len > 4000 ? ' warning' : ''));
+});
+
+// ─── URL Analysis ────────────────────────────────────────────
+async function analyzeUrl() {
+  const url = document.getElementById('urlInput').value.trim();
+  if (!url) { toast('Please enter a URL.', 'error'); return; }
+
+  const btn = document.getElementById('urlAnalyzeBtn');
+  const loadingCard = document.getElementById('loadingCard');
+  const fallbackCard = document.getElementById('fallbackCard');
+
+  // Hide previous results
+  document.getElementById('result-section').style.display = 'none';
+  fallbackCard.classList.remove('visible');
+  setBtnLoading(btn, true);
+
+  // Detect platform for loading UI
+  const platform = detectPlatformClient(url);
+  document.getElementById('loadingPlatformIcon').textContent = PLATFORM_EMOJIS[platform] || '🔗';
+  document.getElementById('loadingText').textContent = `Fetching from ${platform === 'unknown' ? 'URL' : platform.charAt(0).toUpperCase() + platform.slice(1)}...`;
+  loadingCard.classList.add('visible');
+
+  try {
+    const res = await fetch('/api/analyze-url', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ url, model: document.getElementById('modelSelect').value })
+    });
+
+    const data = await res.json();
+    loadingCard.classList.remove('visible');
+
+    if (!res.ok) {
+      if (data.error_type === 'unsupported_platform') {
+        // Show graceful fallback UI
+        const meta = data.platform_meta || {};
+        document.getElementById('fallbackIcon').textContent = PLATFORM_EMOJIS[data.platform] || '🔗';
+        document.getElementById('fallbackTitle').textContent = `${meta.name || 'Platform'} Requires Authentication`;
+        document.getElementById('fallbackMsg').textContent = data.error;
+        fallbackCard.classList.add('visible');
+        fallbackCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      } else {
+        toast(data.error || 'Analysis failed.', 'error');
+      }
+      setBtnLoading(btn, false);
+      return;
+    }
+
+    lastResult = data;
+    renderResult(data, true);
+    document.getElementById('result-section').style.display = 'block';
+    document.getElementById('resultsCard').scrollIntoView({ behavior: 'smooth', block: 'center' });
+    loadDashboard();
+    loadHistory();
+    toast('URL analysis complete!', 'success');
+
+  } catch (err) {
+    loadingCard.classList.remove('visible');
+    toast(err.message || 'Network error.', 'error');
+  } finally {
+    setBtnLoading(btn, false);
+  }
+}
+
+function detectPlatformClient(url) {
+  const u = url.toLowerCase();
+  if (u.includes('twitter.com') || u.includes('x.com')) return 'twitter';
+  if (u.includes('reddit.com') || u.includes('redd.it')) return 'reddit';
+  if (u.includes('youtube.com') || u.includes('youtu.be')) return 'youtube';
+  if (u.includes('instagram.com')) return 'instagram';
+  if (u.includes('facebook.com') || u.includes('fb.com')) return 'facebook';
+  if (u.includes('linkedin.com')) return 'linkedin';
+  return 'unknown';
+}
+
+// ─── Text Analysis ───────────────────────────────────────────
+async function analyzeText() {
+  const text = textInput.value.trim();
+  if (!text) { toast('Please enter some text.', 'error'); return; }
+
+  const model = document.getElementById('modelSelect').value;
+  const btn = document.getElementById('analyzeBtn');
+  setBtnLoading(btn, true);
+
+  // Hide previous results
+  document.getElementById('result-section').style.display = 'none';
+  document.getElementById('fallbackCard').classList.remove('visible');
+
+  try {
+    const res = await fetch('/api/analyze', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ text, model })
+    });
+    if (!res.ok) { const e = await res.json(); throw new Error(e.error); }
+    const data = await res.json();
+    lastResult = data;
+
+    if (Array.isArray(data)) {
+      renderResult(data[0], false);
+      renderModelCompare(data);
+    } else {
+      renderResult(data, false);
+      document.getElementById('modelCompare').innerHTML = '';
+    }
+
+    document.getElementById('result-section').style.display = 'block';
+    document.getElementById('resultsCard').scrollIntoView({ behavior: 'smooth', block: 'center' });
+    loadDashboard();
+    loadHistory();
+    toast('Analysis complete!', 'success');
+  } catch (err) {
+    toast(err.message, 'error');
+  } finally {
+    setBtnLoading(btn, false);
+  }
+}
+
+// ─── Render Result ───────────────────────────────────────────
+function renderResult(r, isUrl = false) {
+  const emojis = { positive: '😊', negative: '😠', neutral: '😐' };
+
+  // Platform badge (only for URL results)
+  const badgeArea = document.getElementById('platformBadgeArea');
+  if (isUrl && r.platform) {
+    const color = PLATFORM_COLORS[r.platform] || '#6B7280';
+    const emoji = PLATFORM_EMOJIS[r.platform] || '🔗';
+    const name = r.platform_meta?.name || r.platform;
+    badgeArea.innerHTML = `<span class="platform-result-badge" style="background:${color}15;color:${color};border:1px solid ${color}30;">${emoji} ${name}</span>`;
+  } else {
+    badgeArea.innerHTML = '';
+  }
+
+  // Quote box (for URL results — show extracted text)
+  const quoteArea = document.getElementById('quoteBoxArea');
+  if (isUrl && r.extracted_text) {
+    let authorLine = r.author ? `<div style="margin-top:8px;font-style:normal;font-size:0.8rem;color:var(--text-muted);">— ${esc(r.author)}</div>` : '';
+    quoteArea.innerHTML = `<div class="quote-box">${esc(r.extracted_text)}${authorLine}</div>`;
+  } else {
+    quoteArea.innerHTML = '';
+  }
+
+  // Emoji + Label
+  document.getElementById('resultEmoji').textContent = emojis[r.label] || '😐';
+  const lbl = document.getElementById('resultLabel');
+  lbl.textContent = r.label.toUpperCase();
+  lbl.className = 'result-label ' + r.label;
+
+  // Arc Gauge
+  const arcFill = document.getElementById('arcFill');
+  const arcTotalLength = 251.2;
+  const targetOffset = arcTotalLength - (arcTotalLength * r.confidence / 100);
+  arcFill.className.baseVal = 'arc-fill ' + r.label;
+  arcFill.style.strokeDashoffset = arcTotalLength; // reset
+  setTimeout(() => { arcFill.style.strokeDashoffset = targetOffset; }, 50);
+  document.getElementById('arcValue').textContent = r.confidence + '%';
+
+  // Score bars
+  const posP = Math.round(r.pos * 100);
+  const negP = Math.round(r.neg * 100);
+  const neuP = Math.round(r.neu * 100);
+  setTimeout(() => {
+    document.getElementById('posBar').style.width = posP + '%';
+    document.getElementById('negBar').style.width = negP + '%';
+    document.getElementById('neuBar').style.width = neuP + '%';
+  }, 100);
+  document.getElementById('posVal').textContent = posP + '%';
+  document.getElementById('negVal').textContent = negP + '%';
+  document.getElementById('neuVal').textContent = neuP + '%';
+
+  // Word highlighting
+  const box = document.getElementById('wordHighlight');
+  if (r.word_scores && r.word_scores.length) {
+    box.innerHTML = r.word_scores.map(w => {
+      if (w.sentiment === 'positive') return `<span class="word-pos">${esc(w.word)}</span>`;
+      if (w.sentiment === 'negative') return `<span class="word-neg">${esc(w.word)}</span>`;
+      return `<span class="word-neu">${esc(w.word)}</span>`;
+    }).join(' ');
+  } else {
+    box.innerHTML = `<span class="word-neu">${esc(r.clean_text || r.text)}</span>`;
+  }
+}
+
+function renderModelCompare(results) {
+  const container = document.getElementById('modelCompare');
+  const classes = { vader: 'vader-c', textblob: 'textblob-c', bert: 'bert-c', 'bert (fallback: vader)': 'bert-c', 'bert (error fallback: vader)': 'bert-c' };
+  container.innerHTML = results.map(r => `
+    <div class="model-card-v2 ${classes[r.model] || 'vader-c'}">
+      <div class="mc-name">${r.model.toUpperCase()}</div>
+      <span class="mc-badge ${r.label}">${r.label}</span>
+      <div class="mc-conf">Confidence: ${r.confidence}% • Compound: ${r.compound}</div>
+    </div>
+  `).join('');
+}
+
+function resetAnalyzer() {
+  document.getElementById('result-section').style.display = 'none';
+  document.getElementById('fallbackCard').classList.remove('visible');
+  document.getElementById('urlInput').value = '';
+  textInput.value = '';
+  charCounter.textContent = '0 / 5,000';
+  document.getElementById('posBar').style.width = '0';
+  document.getElementById('negBar').style.width = '0';
+  document.getElementById('neuBar').style.width = '0';
+  document.getElementById('arcFill').style.strokeDashoffset = '251.2';
+  document.getElementById('analyzer').scrollIntoView({ behavior: 'smooth' });
+}
+
+// ─── Bulk Upload ─────────────────────────────────────────────
+function toggleUpload() {
+  document.getElementById('uploadZone').classList.toggle('visible');
+}
+
+const uploadZone = document.getElementById('uploadZone');
+const csvInput = document.getElementById('csvInput');
+['dragenter','dragover'].forEach(e => uploadZone.addEventListener(e, ev => { ev.preventDefault(); uploadZone.classList.add('dragover'); }));
+['dragleave','drop'].forEach(e => uploadZone.addEventListener(e, ev => { ev.preventDefault(); uploadZone.classList.remove('dragover'); }));
+uploadZone.addEventListener('drop', e => { if(e.dataTransfer.files[0]) handleCSV(e.dataTransfer.files[0]); });
+csvInput.addEventListener('change', e => { if(e.target.files[0]) handleCSV(e.target.files[0]); });
+
+async function handleCSV(file) {
+  if (!file.name.endsWith('.csv')) { toast('Only CSV files accepted.', 'error'); return; }
+  const btn = document.getElementById('uploadToggle');
+  setBtnLoading(btn, true);
+
+  try {
+    const fd = new FormData();
+    fd.append('file', file);
+    fd.append('model', document.getElementById('modelSelect').value);
+    const res = await fetch('/api/bulk', { method: 'POST', body: fd });
+    if (!res.ok) { const e = await res.json(); throw new Error(e.error); }
+    const data = await res.json();
+    renderBulkResults(data);
+    loadDashboard();
+    loadHistory();
+    toast(`Analyzed ${data.summary.total} posts!`, 'success');
+  } catch (err) {
+    toast(err.message, 'error');
+  } finally {
+    setBtnLoading(btn, false);
+  }
+}
+
+function renderBulkResults(data) {
+  const s = data.summary;
+  document.getElementById('bulkStats').innerHTML = `
+    <div class="stat-card"><div class="stat-value" style="color:var(--purple);">${s.total}</div><div class="stat-label">Total</div></div>
+    <div class="stat-card"><div class="stat-value" style="color:var(--green);">${s.positive}</div><div class="stat-label">Positive</div></div>
+    <div class="stat-card"><div class="stat-value" style="color:var(--red);">${s.negative}</div><div class="stat-label">Negative</div></div>
+    <div class="stat-card"><div class="stat-value" style="color:var(--amber);">${s.neutral}</div><div class="stat-label">Neutral</div></div>
+  `;
+  const rows = data.results.slice(0, 50).map(r => `
+    <div class="history-item" style="margin-bottom:6px;">
+      <span></span>
+      <span class="hi-text">${esc(r.text)}</span>
+      <span class="hi-badge ${r.label}">${r.label}</span>
+      <span class="hi-conf">${r.confidence}%</span>
+      <span></span><span></span>
+    </div>
+  `).join('');
+  document.getElementById('bulkTable').innerHTML = rows;
+  document.getElementById('bulkResults').classList.add('visible');
+  document.getElementById('bulkResults').scrollIntoView({ behavior: 'smooth' });
+}
+
+// ─── Dashboard ───────────────────────────────────────────────
+async function loadDashboard() {
+  try {
+    const [statsRes, histRes] = await Promise.all([fetch('/api/stats'), fetch('/api/history')]);
+    const stats = await statsRes.json();
+    const hist = await histRes.json();
+
+    animateValue('sTotal', stats.total_count);
+    animateValue('sPos', stats.positive_pct, '%');
+    animateValue('sNeg', stats.negative_pct, '%');
+    animateValue('sNeu', stats.neutral_pct, '%');
+
+    // Update hero stats
+    const totalStr = stats.total_count >= 1000000 ? (stats.total_count / 1000000).toFixed(1) + 'M' :
+                     stats.total_count >= 1000 ? (stats.total_count / 1000).toFixed(1) + 'K' :
+                     stats.total_count.toString();
+    document.getElementById('heroTotal').textContent = totalStr || '0';
+
+    renderDoughnut(stats);
+    renderPlatformChart(stats);
+    renderTrend(stats.trend);
+  } catch (e) { console.error('Dashboard error:', e); }
+}
+
+function renderDoughnut(stats) {
+  const ctx = document.getElementById('doughnutChart');
+  if (charts.doughnut) charts.doughnut.destroy();
+  charts.doughnut = new Chart(ctx, {
+    type: 'doughnut',
+    data: {
+      labels: ['Positive', 'Negative', 'Neutral'],
+      datasets: [{ data: [stats.positive_pct, stats.negative_pct, stats.neutral_pct],
+        backgroundColor: ['rgba(16,185,129,0.85)', 'rgba(239,68,68,0.85)', 'rgba(245,158,11,0.85)'],
+        borderColor: ['#10B981', '#EF4444', '#F59E0B'], borderWidth: 2, hoverOffset: 10 }]
+    },
+    options: {
+      responsive: true, cutout: '68%',
+      plugins: { legend: { position: 'bottom', labels: { color: '#6B7280', font: { family: 'Inter', size: 12 }, padding: 16, usePointStyle: true } },
+        tooltip: { backgroundColor: '#fff', titleColor: '#1E1B4B', bodyColor: '#6B7280', borderColor: 'rgba(124,58,237,0.1)', borderWidth: 1, padding: 12, cornerRadius: 10,
+          titleFont: { family: 'Outfit', weight: '700' } } },
+      animation: { animateRotate: true, duration: 1200 }
+    }
+  });
+}
+
+function renderPlatformChart(stats) {
+  const ctx = document.getElementById('platformChart');
+  if (charts.platform) charts.platform.destroy();
+
+  const bp = stats.by_platform || {};
+  const platforms = Object.keys(bp);
+
+  if (!platforms.length) {
+    charts.platform = new Chart(ctx, { type: 'bar', data: { labels: ['No data'], datasets: [{ data: [0] }] },
+      options: { responsive: true, plugins: { legend: { display: false } },
+        scales: { x: { ticks: { color: '#9CA3AF' }, grid: { display: false } },
+                  y: { ticks: { color: '#9CA3AF' }, grid: { color: 'rgba(124,58,237,0.05)' } } } } });
+    return;
+  }
+
+  const labels = platforms.map(p => p.charAt(0).toUpperCase() + p.slice(1));
+  charts.platform = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels,
+      datasets: [
+        { label: 'Positive', data: platforms.map(p => bp[p].positive || 0), backgroundColor: 'rgba(16,185,129,0.8)', borderRadius: 6 },
+        { label: 'Negative', data: platforms.map(p => bp[p].negative || 0), backgroundColor: 'rgba(239,68,68,0.8)', borderRadius: 6 },
+        { label: 'Neutral',  data: platforms.map(p => bp[p].neutral || 0),  backgroundColor: 'rgba(245,158,11,0.8)', borderRadius: 6 }
+      ]
+    },
+    options: {
+      responsive: true, plugins: { legend: { position: 'bottom', labels: { color: '#6B7280', font: { family: 'Inter', size: 11 }, usePointStyle: true } },
+        tooltip: { backgroundColor: '#fff', titleColor: '#1E1B4B', bodyColor: '#6B7280', borderColor: 'rgba(124,58,237,0.1)', borderWidth: 1, padding: 12, cornerRadius: 10 } },
+      scales: { x: { ticks: { color: '#6B7280', font: { size: 11 } }, grid: { display: false } },
+                y: { ticks: { color: '#9CA3AF', font: { size: 10 } }, grid: { color: 'rgba(124,58,237,0.05)' }, beginAtZero: true } },
+      animation: { duration: 1000 }
+    }
+  });
+}
+
+function renderTrend(trend) {
+  const ctx = document.getElementById('trendChart');
+  if (charts.trend) charts.trend.destroy();
+  if (!trend || !trend.length) {
+    charts.trend = new Chart(ctx, { type: 'line', data: { labels: ['—'], datasets: [{ data: [0] }] },
+      options: { responsive: true, plugins: { legend: { display: false } },
+        scales: { x: { ticks: { color: '#9CA3AF' }, grid: { color: 'rgba(124,58,237,0.05)' } },
+                  y: { ticks: { color: '#9CA3AF' }, grid: { color: 'rgba(124,58,237,0.05)' } } } } });
+    return;
+  }
+  const labels = trend.map((_, i) => `#${i + 1}`);
+  const compoundData = trend.map(t => t.compound);
+  const confData = trend.map(t => t.confidence);
+
+  charts.trend = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels,
+      datasets: [
+        { label: 'Compound', data: compoundData, borderColor: '#7C3AED', backgroundColor: 'rgba(124,58,237,0.1)', fill: true, tension: 0.4, pointRadius: 3, borderWidth: 2.5 },
+        { label: 'Confidence', data: confData, borderColor: '#EC4899', backgroundColor: 'rgba(236,72,153,0.1)', fill: true, tension: 0.4, pointRadius: 3, borderWidth: 2.5 }
+      ]
+    },
+    options: {
+      responsive: true, interaction: { mode: 'index', intersect: false },
+      plugins: { legend: { labels: { color: '#6B7280', font: { family: 'Inter', size: 11 }, usePointStyle: true } },
+        tooltip: { backgroundColor: '#fff', titleColor: '#1E1B4B', bodyColor: '#6B7280', borderColor: 'rgba(124,58,237,0.1)', borderWidth: 1, padding: 12, cornerRadius: 10 } },
+      scales: { x: { ticks: { color: '#9CA3AF', font: { size: 10 } }, grid: { color: 'rgba(124,58,237,0.05)' } },
+        y: { ticks: { color: '#9CA3AF', font: { size: 10 } }, grid: { color: 'rgba(124,58,237,0.05)' } } },
+      animation: { duration: 1200 }
+    }
+  });
+}
+
+// ─── History ─────────────────────────────────────────────────
+async function loadHistory() {
+  try {
+    const res = await fetch('/api/history');
+    allHistory = await res.json();
+    renderHistoryFeed();
+  } catch (e) { console.error('History error:', e); }
+}
+
+function renderHistoryFeed() {
+  const feed = document.getElementById('historyFeed');
+  const empty = document.getElementById('historyEmpty');
+  const search = document.getElementById('historySearch').value.toLowerCase();
+
+  let filtered = allHistory;
+  if (currentFilter !== 'all') {
+    // Check if filter is a platform or sentiment
+    const sentiments = ['positive', 'negative', 'neutral'];
+    if (sentiments.includes(currentFilter)) {
+      filtered = filtered.filter(h => h.label === currentFilter);
+    } else {
+      filtered = filtered.filter(h => (h.platform || '') === currentFilter);
+    }
+  }
+  if (search) filtered = filtered.filter(h => (h.text || '').toLowerCase().includes(search));
+
+  if (!filtered.length) {
+    feed.innerHTML = '';
+    empty.style.display = 'block';
+    return;
+  }
+  empty.style.display = 'none';
+
+  const displayed = filtered.slice(0, historyLimit);
+  feed.innerHTML = displayed.map(h => {
+    const emoji = PLATFORM_EMOJIS[h.platform] || '📝';
+    const timeAgo = getTimeAgo(h.timestamp);
+    return `<div class="history-item">
+      <span class="hi-platform" title="${h.platform || 'text'}">${emoji}</span>
+      <span class="hi-text" title="${esc(h.text)}">${esc(h.text)}</span>
+      <span class="hi-badge ${h.label}">${h.label}</span>
+      <span class="hi-meta">${h.model} • ${timeAgo}</span>
+      <span class="hi-conf">${h.confidence}%</span>
+      <button class="hi-reanalyze" onclick="reanalyze('${esc(h.text?.replace(/'/g, "\\'"))}')">↻</button>
+    </div>`;
+  }).join('');
+
+  // Show load more button if there are more items
+  if (filtered.length > historyLimit) {
+    feed.innerHTML += `<button class="load-more-btn" onclick="loadMoreHistory()">Load More (${filtered.length - historyLimit} remaining)</button>`;
+  }
+}
+
+function loadMoreHistory() {
+  historyLimit += 20;
+  renderHistoryFeed();
+}
+
+function getTimeAgo(timestamp) {
+  const diff = Date.now() - new Date(timestamp).getTime();
+  const mins = Math.floor(diff / 60000);
+  if (mins < 1) return 'just now';
+  if (mins < 60) return `${mins}m ago`;
+  const hrs = Math.floor(mins / 60);
+  if (hrs < 24) return `${hrs}h ago`;
+  const days = Math.floor(hrs / 24);
+  return `${days}d ago`;
+}
+
+function reanalyze(text) {
+  textInput.value = text;
+  textInput.dispatchEvent(new Event('input'));
+  switchTab('text');
+  document.getElementById('analyzer').scrollIntoView({ behavior: 'smooth' });
+}
+
+function filterHistory(filter, btn) {
+  currentFilter = filter;
+  historyLimit = 20;
+  document.querySelectorAll('.filter-pill').forEach(p => p.classList.remove('active'));
+  btn.classList.add('active');
+  renderHistoryFeed();
+}
+
+function searchHistory() { renderHistoryFeed(); }
+
+function showClearModal() { document.getElementById('confirmModal').classList.add('visible'); }
+function closeModal() { document.getElementById('confirmModal').classList.remove('visible'); }
+async function confirmClearHistory() {
+  closeModal();
+  try {
+    await fetch('/api/history', { method: 'DELETE' });
+    allHistory = [];
+    renderHistoryFeed();
+    loadDashboard();
+    toast('History cleared.', 'success');
+  } catch (e) { toast('Failed to clear history.', 'error'); }
+}
+
+// ─── Result Actions ──────────────────────────────────────────
+function copyResult() {
+  if (!lastResult) return;
+  const r = Array.isArray(lastResult) ? lastResult[0] : lastResult;
+  const text = `Sentiment: ${r.label.toUpperCase()}\nConfidence: ${r.confidence}%\nCompound: ${r.compound}\nModel: ${r.model}\nText: ${r.text}`;
+  navigator.clipboard.writeText(text).then(() => toast('Copied to clipboard!', 'success'));
+}
+
+function shareResult() {
+  if (!lastResult) return;
+  const r = Array.isArray(lastResult) ? lastResult[0] : lastResult;
+  const url = `${window.location.origin}?text=${encodeURIComponent(r.text)}&model=${r.model}`;
+  navigator.clipboard.writeText(url).then(() => toast('Share link copied!', 'info'));
+}
+
+// ─── Utilities ───────────────────────────────────────────────
+function esc(s) { if (!s) return ''; const d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
+
+function setBtnLoading(btn, loading) {
+  if (loading) { btn.disabled = true; btn._html = btn.innerHTML; btn.innerHTML = '<span class="spinner"></span> Analyzing...'; }
+  else { btn.disabled = false; btn.innerHTML = btn._html || btn.innerHTML; }
+}
+
+function animateValue(id, target, suffix = '') {
+  const el = document.getElementById(id);
+  if (!el) return;
+  const start = parseFloat(el.textContent) || 0;
+  const dur = 800;
+  const t0 = performance.now();
+  function tick(now) {
+    const p = Math.min((now - t0) / dur, 1);
+    const e = 1 - Math.pow(1 - p, 3);
+    el.textContent = Math.round(start + (target - start) * e) + suffix;
+    if (p < 1) requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(tick);
+}
+
+function toast(msg, type = 'info') {
+  const c = document.getElementById('toasts');
+  const t = document.createElement('div');
+  t.className = `toast ${type}`;
+  const icons = { success: 'fa-check-circle', error: 'fa-exclamation-circle', info: 'fa-info-circle' };
+  const colors = { success: 'var(--green)', error: 'var(--red)', info: 'var(--cyan)' };
+  t.innerHTML = `<i class="fas ${icons[type]}" style="color:${colors[type]}"></i> ${msg}`;
+  c.appendChild(t);
+  setTimeout(() => { t.classList.add('removing'); setTimeout(() => t.remove(), 300); }, 3500);
+}
+
+// Nav active state on scroll
+const sections = document.querySelectorAll('section[id]');
+const navLinks = document.querySelectorAll('.nav-links a:not(.nav-cta)');
+window.addEventListener('scroll', () => {
+  let current = '';
+  sections.forEach(s => { if (window.scrollY >= s.offsetTop - 200) current = s.id; });
+  navLinks.forEach(l => { l.classList.toggle('active', l.dataset.section === current); });
+});
+
+// Check for shared URL param
+(function checkShare() {
+  const params = new URLSearchParams(window.location.search);
+  const text = params.get('text');
+  if (text) {
+    textInput.value = text;
+    textInput.dispatchEvent(new Event('input'));
+    switchTab('text');
+  }
+})();
+
+// Enter key support for URL input
+document.getElementById('urlInput').addEventListener('keydown', e => {
+  if (e.key === 'Enter') { e.preventDefault(); analyzeUrl(); }
+});
+
+// Enter key support for text input (Ctrl+Enter)
+textInput.addEventListener('keydown', e => {
+  if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) { e.preventDefault(); analyzeText(); }
+});
+
+// Initial load
+loadDashboard();
+loadHistory();
+</script>
+</body>
+</html>
