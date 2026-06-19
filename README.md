@@ -1,11 +1,13 @@
 # 🧠 SentimentAI — AI-Powered Sentiment Analysis
 
-A production-quality, full-stack web application for analyzing the sentiment of social media posts using **three NLP models** — VADER, TextBlob, and RoBERTa — with a stunning Three.js-powered dark-mode dashboard.
+A production-quality, full-stack web application for analyzing the sentiment of social media posts using **VADER and TextBlob** — with a vibrant colorful UI, URL-based analysis, and full demo mode.
+
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-Coming%20Soon-purple?style=for-the-badge&logo=render)](https://sentimentai.onrender.com)
 
 ![Python](https://img.shields.io/badge/Python-3.9%2B-blue?logo=python)
 ![Flask](https://img.shields.io/badge/Flask-3.0-green?logo=flask)
-![HuggingFace](https://img.shields.io/badge/HuggingFace-RoBERTa-yellow?logo=huggingface)
-![Three.js](https://img.shields.io/badge/Three.js-Particles-black?logo=three.js)
+![VADER](https://img.shields.io/badge/VADER-Sentiment-purple)
+![TextBlob](https://img.shields.io/badge/TextBlob-NLP-cyan)
 ![License](https://img.shields.io/badge/License-MIT-purple)
 
 ---
@@ -14,16 +16,18 @@ A production-quality, full-stack web application for analyzing the sentiment of 
 
 | Feature | Description |
 |---|---|
-| **Single Post Analyzer** | Paste text, choose model, get instant sentiment with confidence + word highlighting |
+| **URL Analyzer** | Paste a Twitter, Reddit, or YouTube URL — the app fetches and analyzes the post automatically |
+| **Text Analyzer** | Paste any text directly with live character count and model selection |
 | **Bulk CSV Upload** | Upload thousands of posts, analyze all at once with drag-and-drop |
-| **3D Particle Hero** | 2000-particle Three.js background with mouse parallax |
-| **3D Sentiment Orb** | Color-shifting CSS 3D orb (green/red/grey) |
-| **Model Comparison** | Run VADER, TextBlob, and BERT side-by-side |
+| **Demo Mode** | Toggle ON to preload 30 realistic sample analyses — app always looks populated |
+| **Model Comparison** | Run VADER and TextBlob side-by-side with confidence scores |
 | **Word Highlighting** | Every word color-coded: green (positive), red (negative), grey (neutral) |
-| **Dashboard** | Doughnut chart, trend line, word cloud, animated stat counters |
-| **History Feed** | Searchable, filterable history of all past analyses |
-| **API Docs** | Built-in API reference with copy-to-clipboard code examples |
-| **Share Links** | Generate shareable URLs with query parameters |
+| **Confidence Arc Gauge** | Animated SVG semi-circle gauge showing analysis confidence |
+| **Dashboard** | Doughnut chart, platform breakdown, trend line, animated stat counters |
+| **History Feed** | Searchable, filterable history with platform and sentiment filters |
+| **Platform Detection** | Auto-detects Twitter, Reddit, YouTube, Instagram, Facebook, LinkedIn from URL |
+| **Graceful Fallbacks** | Beautiful fallback UI for platforms requiring authentication |
+| **Share & Copy** | Copy results as text, JSON, or shareable URL |
 | **Deployment Ready** | Procfile + render.yaml for one-click Render.com deploy |
 
 ---
@@ -35,13 +39,12 @@ A production-quality, full-stack web application for analyzing the sentiment of 
 | **Backend** | Python 3.9+, Flask 3.0, Flask-CORS |
 | **NLP — Rule-based** | NLTK VADER |
 | **NLP — Lexicon** | TextBlob |
-| **NLP — Deep Learning** | HuggingFace Transformers (cardiffnlp/twitter-roberta-base-sentiment) |
 | **Database** | SQLite 3 |
-| **Frontend** | HTML5, CSS3, Vanilla JavaScript (all inline) |
-| **3D Graphics** | Three.js r128 |
-| **Charts** | Chart.js 4.x |
+| **Frontend** | HTML5, CSS3, Vanilla JavaScript (all inline SPA) |
+| **Charts** | Chart.js 4.x (lazy-loaded) |
 | **Icons** | Font Awesome 6 |
-| **Typography** | Space Grotesk + Inter + JetBrains Mono |
+| **Typography** | Outfit (headings) + Inter (body) via Google Fonts |
+| **URL APIs** | Twitter oEmbed, Reddit JSON API, YouTube oEmbed |
 
 ---
 
@@ -49,20 +52,22 @@ A production-quality, full-stack web application for analyzing the sentiment of 
 
 ```
 sentiment-analyzer/
-├── app.py                    # Flask server with 5 API endpoints
+├── app.py                    # Flask server with 7 API endpoints
 ├── models/
 │   ├── __init__.py
 │   ├── vader_model.py        # VADER with word-level scoring
 │   ├── textblob_model.py     # TextBlob analyzer
-│   └── bert_model.py         # RoBERTa with VADER fallback
+│   └── bert_model.py         # Stub — roadmap item, delegates to VADER
 ├── utils/
 │   ├── __init__.py
 │   ├── preprocessor.py       # Text cleaning pipeline
+│   ├── url_fetcher.py        # Platform detection + text extraction
 │   └── database.py           # SQLite operations
 ├── templates/
-│   └── index.html            # Complete SPA (CSS+JS inline)
+│   └── index.html            # Complete SPA (CSS+JS inline, all 7 sections)
 ├── data/
-│   └── sample_tweets.csv     # 20 test tweets
+│   ├── sample_tweets.csv     # Sample test data
+│   └── demo_posts.json       # Demo mode preloaded data (30 entries)
 ├── requirements.txt
 ├── Procfile                  # Render.com deployment
 ├── render.yaml               # One-click deploy config
@@ -97,7 +102,7 @@ python app.py
 
 Open **http://localhost:5000** 🎉
 
-> **Note:** RoBERTa downloads ~500 MB on first analysis. Falls back to VADER if unavailable.
+> **Demo Mode** is ON by default — the app will auto-seed 30 sample analyses so the dashboard and history sections look populated immediately.
 
 ---
 
@@ -106,16 +111,25 @@ Open **http://localhost:5000** 🎉
 | Endpoint | Method | Description |
 |---|---|---|
 | `/api/analyze` | POST | Analyze single text |
+| `/api/analyze-url` | POST | Analyze social media post by URL |
 | `/api/bulk` | POST | Bulk CSV analysis |
 | `/api/history` | GET | Last 100 analyses |
 | `/api/stats` | GET | Aggregate statistics |
 | `/api/history` | DELETE | Clear all history |
+| `/api/demo-seed` | POST | Seed demo data (30 entries) |
 
 ### Example: Analyze Text
 ```bash
 curl -X POST http://localhost:5000/api/analyze \
   -H "Content-Type: application/json" \
-  -d '{"text": "I love this product!", "model": "all"}'
+  -d '{"text": "I love this product!", "model": "vader"}'
+```
+
+### Example: Analyze URL
+```bash
+curl -X POST http://localhost:5000/api/analyze-url \
+  -H "Content-Type: application/json" \
+  -d '{"url": "https://twitter.com/elonmusk/status/1234567890"}'
 ```
 
 ### Response Schema
@@ -144,9 +158,35 @@ curl -X POST http://localhost:5000/api/analyze \
 
 | Model | Type | Speed | Accuracy | Best For |
 |---|---|---|---|---|
-| **VADER** | Rule-based | ⚡ Very Fast | Good | Social media, emojis, slang |
-| **TextBlob** | Lexicon | ⚡ Fast | Moderate | General text, subjectivity |
-| **RoBERTa** | Deep Learning | 🐢 Slower | High | Nuanced, complex text |
+| **VADER** | Rule-based | ⚡ Very Fast | ~87% | Social media, emojis, slang |
+| **TextBlob** | Lexicon | ⚡ Fast | ~82% | General text, subjectivity |
+| **BERT** *(roadmap)* | Deep Learning | 🐢 Slower | ~94% | Nuanced, complex text |
+
+---
+
+## ⚠️ Known Limitations
+
+Transparency is important — here are the current constraints:
+
+| Limitation | Details |
+|---|---|
+| **Twitter oEmbed** | May be unreliable for very old tweets or if Twitter changes their API. Works well for recent public tweets. |
+| **Reddit API** | Requires `User-Agent` header (included). May be rate-limited under heavy use. |
+| **Instagram/Facebook/LinkedIn** | Cannot be scraped — these platforms require authentication. The app provides a graceful fallback UI prompting users to paste text manually. |
+| **VADER limitations** | Rule-based, so it can miss sarcasm, irony, and complex context. Best for straightforward social media text. |
+| **TextBlob limitations** | Pattern-based, so accuracy drops on informal text with heavy slang or emojis. |
+| **No BERT yet** | Deep learning model is on the roadmap but excluded from this release to keep deployments lightweight (~500MB+ saved). |
+
+---
+
+## 🗺️ Future Roadmap
+
+- [ ] **BERT/RoBERTa Integration** — Deep learning sentiment with ~94% accuracy (Q3 2025)
+- [ ] **Multilingual Support** — Analyze posts in Spanish, French, German, Japanese (Q4 2025)
+- [ ] **Sarcasm Detection** — AI layer to detect irony and implied sentiment (2026)
+- [ ] **Real-time Monitoring** — Stream and analyze posts in real-time from Twitter/Reddit
+- [ ] **Export to PDF** — Generate beautiful sentiment reports
+- [ ] **Team Collaboration** — Share dashboards and history across teams
 
 ---
 
@@ -157,8 +197,10 @@ curl -X POST http://localhost:5000/api/analyze \
 3. Use the included `render.yaml` for one-click deploy
 
 Or manually:
-- **Build command:** `pip install -r requirements.txt && python -m nltk.downloader vader_lexicon punkt_tab`
+- **Build command:** `pip install -r requirements.txt && python -m nltk.downloader vader_lexicon punkt_tab && python -m textblob.download_corpora`
 - **Start command:** `gunicorn app:app`
+
+> ✅ No heavy dependencies — no `transformers` or `torch` means fast builds and reliable free-tier deployments.
 
 ---
 
@@ -168,4 +210,4 @@ MIT License — free for personal and commercial use.
 
 ---
 
-Built with ❤️ using Python, Flask, Three.js, and modern NLP.
+Built with ❤️ using Python, Flask, and modern NLP.

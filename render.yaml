@@ -8,6 +8,7 @@ services:
       python -m nltk.downloader vader_lexicon punkt_tab
       python -m textblob.download_corpora
     startCommand: gunicorn app:app
+    healthCheckPath: /
     envVars:
       - key: PYTHON_VERSION
         value: "3.11"

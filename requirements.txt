@@ -2,8 +2,6 @@ flask
 flask-cors
 nltk
 textblob
-transformers
-torch
 pandas
 gunicorn
 requests

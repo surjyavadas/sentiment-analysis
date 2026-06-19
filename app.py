@@ -3,13 +3,20 @@ SentimentAI — Flask Backend
 
 Production-quality REST API for multi-model sentiment analysis.
 Serves the SPA frontend and exposes 6 API endpoints including
-URL-based social media analysis.
+URL-based social media analysis, plus demo mode support.
 """
 import os
 import io
 import json
 import logging
-from datetime import datetime, timezone
+import nltk
+from datetime import datetime, timezone, timedelta
+import random
+
+# Ensure NLTK can find bundled data (for Vercel deployment)
+_nltk_data_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "nltk_data")
+if os.path.isdir(_nltk_data_dir):
+    nltk.data.path.insert(0, _nltk_data_dir)
 
 from flask import Flask, request, jsonify, render_template
 from flask_cors import CORS
@@ -17,7 +24,7 @@ import pandas as pd
 
 from utils.database import init_db, save_analysis, save_analyses_bulk, get_history, clear_history, get_stats
 from utils.url_fetcher import detect_platform, fetch_text_from_url, get_platform_meta, UnsupportedPlatformError, FetchError
-from models import vader_model, textblob_model, bert_model
+from models import vader_model, textblob_model
 
 # ─── App Setup ────────────────────────────────────────────────────────
 app = Flask(__name__)
@@ -34,12 +41,24 @@ logger = logging.getLogger(__name__)
 init_db()
 logger.info("Database initialized.")
 
-# Model dispatch table
+# Model dispatch table (BERT removed — it's a roadmap item)
 MODEL_MAP = {
     "vader": vader_model,
     "textblob": textblob_model,
-    "bert": bert_model,
 }
+
+# Demo data path
+DEMO_DATA_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data", "demo_posts.json")
+
+
+def _load_demo_data():
+    """Load demo posts from JSON file."""
+    try:
+        with open(DEMO_DATA_PATH, "r", encoding="utf-8") as f:
+            return json.load(f)
+    except Exception as e:
+        logger.error("Failed to load demo data: %s", e)
+        return {"example_posts": [], "demo_history": []}
 
 
 # ─── Page Route ───────────────────────────────────────────────────────
@@ -57,8 +76,8 @@ def api_analyze():
     """
     Analyze a single text.
 
-    Body: { "text": "...", "model": "vader|textblob|bert|all" }
-    Returns: Single result dict, or array of 3 results if model="all".
+    Body: { "text": "...", "model": "vader|textblob|all" }
+    Returns: Single result dict, or array of results if model="all".
     """
     data = request.get_json(silent=True)
     if not data or not data.get("text", "").strip():
@@ -78,7 +97,7 @@ def api_analyze():
         else:
             mod = MODEL_MAP.get(model_name)
             if not mod:
-                return jsonify({"error": f"Unknown model '{model_name}'. Use: vader, textblob, bert, all"}), 400
+                return jsonify({"error": f"Unknown model '{model_name}'. Use: vader, textblob, all"}), 400
             result = mod.analyze(text)
             save_analysis(result)
             return jsonify(result), 200
@@ -95,7 +114,7 @@ def api_analyze_url():
     """
     Analyze a social media post by URL.
 
-    Body: { "url": "https://twitter.com/...", "model": "vader|textblob|all" }
+    Body: { "url": "https://twitter.com/...", "model": "vader|textblob|all", "demo": false }
     Steps: detect platform → fetch text via platform API/oEmbed → run sentiment → return result
     Returns: { platform, platform_meta, extracted_text, label, compound, pos, neg, neu,
                confidence, word_scores[], url, model, timestamp }
@@ -106,7 +125,34 @@ def api_analyze_url():
 
     url = data["url"].strip()
     model_name = data.get("model", "vader").lower()
+    is_demo = data.get("demo", False)
     platform = detect_platform(url)
+
+    # ─── Demo Mode: return pre-saved result ───
+    if is_demo:
+        demo_data = _load_demo_data()
+        demo_post = None
+        for post in demo_data.get("example_posts", []):
+            if post["platform"] == platform:
+                demo_post = post
+                break
+        if not demo_post:
+            # Fallback: use the first available demo post
+            demo_post = demo_data["example_posts"][0] if demo_data["example_posts"] else None
+
+        if demo_post:
+            # Run actual sentiment analysis on the demo text
+            mod = MODEL_MAP.get(model_name, vader_model)
+            result = mod.analyze(demo_post["text"])
+            result["platform"] = demo_post["platform"]
+            result["platform_meta"] = get_platform_meta(demo_post["platform"])
+            result["url"] = url
+            result["extracted_text"] = demo_post["text"]
+            result["author"] = demo_post.get("author", "")
+            result["post_title"] = demo_post.get("title", "")
+            result["demo"] = True
+            save_analysis(result)
+            return jsonify(result), 200
 
     try:
         # Fetch text from URL
@@ -278,6 +324,65 @@ def api_clear_history():
         return jsonify({"message": f"Cleared {count} records."}), 200
     except Exception as e:
         logger.error("Clear history error: %s", e, exc_info=True)
+        return jsonify({"error": str(e)}), 500
+
+
+# ─── POST /api/demo-seed ─────────────────────────────────────────────
+
+@app.route("/api/demo-seed", methods=["POST"])
+def api_demo_seed():
+    """
+    Seed the database with demo data for presentation mode.
+    Inserts 30 realistic entries with staggered timestamps.
+
+    Returns: { message: "Seeded N demo entries.", count: N }
+    """
+    try:
+        demo_data = _load_demo_data()
+        entries = demo_data.get("demo_history", [])
+
+        if not entries:
+            return jsonify({"error": "No demo data available."}), 500
+
+        now = datetime.now(timezone.utc)
+        results = []
+
+        for i, entry in enumerate(entries):
+            # Create staggered timestamps going backwards
+            ts = now - timedelta(minutes=random.randint(1, 60) + i * 10)
+
+            # Generate word_scores via the appropriate model
+            model_name = entry.get("model", "vader")
+            mod = MODEL_MAP.get(model_name, vader_model)
+            analyzed = mod.analyze(entry["text"])
+
+            result = {
+                "text": entry["text"],
+                "clean_text": analyzed.get("clean_text", entry["text"]),
+                "label": entry["label"],
+                "compound": entry["compound"],
+                "pos": entry["pos"],
+                "neg": entry["neg"],
+                "neu": entry["neu"],
+                "confidence": entry["confidence"],
+                "model": entry["model"],
+                "word_scores": analyzed.get("word_scores", []),
+                "timestamp": ts.isoformat(),
+                "platform": entry.get("platform", ""),
+                "url": "",
+                "extracted_text": "",
+            }
+            results.append(result)
+
+        save_analyses_bulk(results)
+
+        return jsonify({
+            "message": f"Seeded {len(results)} demo entries.",
+            "count": len(results),
+        }), 200
+
+    except Exception as e:
+        logger.error("Demo seed error: %s", e, exc_info=True)
         return jsonify({"error": str(e)}), 500
 
 

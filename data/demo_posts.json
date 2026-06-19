@@ -1,0 +1,71 @@
+{
+  "example_posts": [
+    {
+      "platform": "twitter",
+      "url": "https://twitter.com/elonmusk/status/1234567890",
+      "text": "Just had the most amazing team meeting. Innovation is alive and well! The future is bright for everyone working hard to make a difference. 🚀✨",
+      "author": "Elon Musk",
+      "title": null
+    },
+    {
+      "platform": "reddit",
+      "url": "https://www.reddit.com/r/technology/comments/abc123/ai_breakthrough",
+      "text": "AI Breakthrough: New open-source model achieves state-of-the-art results. This is genuinely exciting — the democratization of AI continues. Anyone who thinks this won't change everything is kidding themselves.",
+      "author": "tech_enthusiast42",
+      "title": "AI Breakthrough: New open-source model achieves state-of-the-art results"
+    },
+    {
+      "platform": "youtube",
+      "url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+      "text": "Why Everything You Know About Productivity Is Wrong — 10 Science-Backed Habits",
+      "author": "Thomas Frank",
+      "title": "Why Everything You Know About Productivity Is Wrong — 10 Science-Backed Habits"
+    },
+    {
+      "platform": "instagram",
+      "url": "https://www.instagram.com/p/ABC123xyz/",
+      "text": "Golden hour hits different when you're surrounded by the people you love most. Grateful for these moments that money can't buy. 🌅💛 #blessed #gratitude",
+      "author": "travel_diaries",
+      "title": null
+    },
+    {
+      "platform": "facebook",
+      "url": "https://www.facebook.com/post/987654321",
+      "text": "Disappointed with the customer service at TechCorp today. Waited 3 hours on hold, got transferred 4 times, and still no resolution. Do better.",
+      "author": "Sarah M.",
+      "title": null
+    }
+  ],
+  "demo_history": [
+    {"text": "Just landed my dream job! Hard work truly pays off 🎉", "platform": "twitter", "label": "positive", "compound": 0.8516, "pos": 0.45, "neg": 0.0, "neu": 0.55, "confidence": 85.2, "model": "vader"},
+    {"text": "The new iPhone update completely bricked my phone. Apple's quality control is terrible.", "platform": "twitter", "label": "negative", "compound": -0.7184, "pos": 0.0, "neg": 0.38, "neu": 0.62, "confidence": 71.8, "model": "vader"},
+    {"text": "Watched the sunset today. It was okay I guess.", "platform": "instagram", "label": "neutral", "compound": 0.0, "pos": 0.12, "neg": 0.0, "neu": 0.88, "confidence": 12.0, "model": "vader"},
+    {"text": "This restaurant has the BEST tacos I've ever had. 10/10 would recommend to everyone!!!", "platform": "reddit", "label": "positive", "compound": 0.9217, "pos": 0.52, "neg": 0.0, "neu": 0.48, "confidence": 92.2, "model": "vader"},
+    {"text": "Can someone explain how quantum computing works? Genuinely curious.", "platform": "reddit", "label": "neutral", "compound": 0.0772, "pos": 0.08, "neg": 0.0, "neu": 0.92, "confidence": 7.7, "model": "textblob"},
+    {"text": "Lost my wallet on the bus today. Had all my cards and $200 cash. Worst day ever.", "platform": "twitter", "label": "negative", "compound": -0.6908, "pos": 0.0, "neg": 0.32, "neu": 0.68, "confidence": 69.1, "model": "vader"},
+    {"text": "My dog learned a new trick today! She can now high-five 🐾😍", "platform": "instagram", "label": "positive", "compound": 0.7096, "pos": 0.36, "neg": 0.0, "neu": 0.64, "confidence": 71.0, "model": "vader"},
+    {"text": "The traffic in this city is absolutely unbearable. 2 hours for a 10-mile commute.", "platform": "facebook", "label": "negative", "compound": -0.5574, "pos": 0.0, "neg": 0.28, "neu": 0.72, "confidence": 55.7, "model": "textblob"},
+    {"text": "Great tutorial on React hooks! Finally understand useEffect properly.", "platform": "youtube", "label": "positive", "compound": 0.6588, "pos": 0.38, "neg": 0.0, "neu": 0.62, "confidence": 65.9, "model": "vader"},
+    {"text": "Meeting rescheduled to 3pm. Please confirm attendance.", "platform": "linkedin", "label": "neutral", "compound": 0.0, "pos": 0.0, "neg": 0.0, "neu": 1.0, "confidence": 0.0, "model": "vader"},
+    {"text": "Absolutely devastated by the news today. My heart goes out to all affected families. 💔", "platform": "twitter", "label": "negative", "compound": -0.8225, "pos": 0.06, "neg": 0.42, "neu": 0.52, "confidence": 82.3, "model": "vader"},
+    {"text": "Just finished a 10K marathon! Personal best time of 48 minutes 🏃‍♂️🏅", "platform": "instagram", "label": "positive", "compound": 0.7783, "pos": 0.41, "neg": 0.0, "neu": 0.59, "confidence": 77.8, "model": "vader"},
+    {"text": "The new season of this show is mid at best. They really dropped the ball.", "platform": "reddit", "label": "negative", "compound": -0.4019, "pos": 0.0, "neg": 0.22, "neu": 0.78, "confidence": 40.2, "model": "textblob"},
+    {"text": "Excited to announce our Series A funding! 🚀 $15M to build the future of EdTech.", "platform": "linkedin", "label": "positive", "compound": 0.8176, "pos": 0.42, "neg": 0.0, "neu": 0.58, "confidence": 81.8, "model": "vader"},
+    {"text": "Why do people still use Internet Explorer? It's 2024.", "platform": "reddit", "label": "neutral", "compound": -0.0258, "pos": 0.0, "neg": 0.05, "neu": 0.95, "confidence": 2.6, "model": "vader"},
+    {"text": "This video changed my perspective on minimalism. Highly recommend watching!", "platform": "youtube", "label": "positive", "compound": 0.7506, "pos": 0.44, "neg": 0.0, "neu": 0.56, "confidence": 75.1, "model": "vader"},
+    {"text": "Scam alert: got a phishing email pretending to be from my bank. Stay safe everyone! ⚠️", "platform": "twitter", "label": "negative", "compound": -0.5267, "pos": 0.1, "neg": 0.3, "neu": 0.6, "confidence": 52.7, "model": "vader"},
+    {"text": "The weather forecast says rain tomorrow. Might need an umbrella.", "platform": "facebook", "label": "neutral", "compound": 0.0, "pos": 0.0, "neg": 0.0, "neu": 1.0, "confidence": 0.0, "model": "textblob"},
+    {"text": "Can't believe how beautiful Kyoto is in spring! Cherry blossoms everywhere 🌸", "platform": "instagram", "label": "positive", "compound": 0.6908, "pos": 0.35, "neg": 0.0, "neu": 0.65, "confidence": 69.1, "model": "vader"},
+    {"text": "The customer support team went above and beyond to resolve my issue. Faith in humanity restored.", "platform": "twitter", "label": "positive", "compound": 0.7003, "pos": 0.33, "neg": 0.0, "neu": 0.67, "confidence": 70.0, "model": "vader"},
+    {"text": "This is the worst API documentation I've ever seen. No examples, no explanations, nothing.", "platform": "reddit", "label": "negative", "compound": -0.7579, "pos": 0.0, "neg": 0.35, "neu": 0.65, "confidence": 75.8, "model": "vader"},
+    {"text": "Had a decent lunch at the new cafe. Nothing special but not bad either.", "platform": "facebook", "label": "neutral", "compound": 0.1027, "pos": 0.12, "neg": 0.08, "neu": 0.8, "confidence": 10.3, "model": "textblob"},
+    {"text": "10 Tips for Better Sleep That Actually Work — backed by science!", "platform": "youtube", "label": "positive", "compound": 0.4404, "pos": 0.28, "neg": 0.0, "neu": 0.72, "confidence": 44.0, "model": "vader"},
+    {"text": "Proud to share that our team won the hackathon! 48 hours of coding madness 🏆", "platform": "linkedin", "label": "positive", "compound": 0.7845, "pos": 0.38, "neg": 0.0, "neu": 0.62, "confidence": 78.5, "model": "vader"},
+    {"text": "Package arrived damaged AGAIN. Third time this month. Done with this shipping company.", "platform": "twitter", "label": "negative", "compound": -0.6249, "pos": 0.0, "neg": 0.31, "neu": 0.69, "confidence": 62.5, "model": "vader"},
+    {"text": "Learning Python. Day 15. Dictionaries make so much more sense now.", "platform": "reddit", "label": "neutral", "compound": 0.0516, "pos": 0.07, "neg": 0.0, "neu": 0.93, "confidence": 5.2, "model": "vader"},
+    {"text": "Sunrise hike with the crew. Nature therapy is real. 🌄🧘", "platform": "instagram", "label": "positive", "compound": 0.4588, "pos": 0.29, "neg": 0.0, "neu": 0.71, "confidence": 45.9, "model": "vader"},
+    {"text": "Flight delayed 6 hours. No updates from the airline. Sitting on the floor of the terminal.", "platform": "twitter", "label": "negative", "compound": -0.4215, "pos": 0.0, "neg": 0.18, "neu": 0.82, "confidence": 42.2, "model": "textblob"},
+    {"text": "Interesting debate on AI ethics happening in the comments. Worth reading both sides.", "platform": "youtube", "label": "neutral", "compound": 0.2732, "pos": 0.18, "neg": 0.0, "neu": 0.82, "confidence": 27.3, "model": "vader"},
+    {"text": "5 years at this company today. Grateful for the journey and the incredible people I've met along the way. Here's to the next chapter! 🥂", "platform": "linkedin", "label": "positive", "compound": 0.8779, "pos": 0.39, "neg": 0.0, "neu": 0.61, "confidence": 87.8, "model": "vader"}
+  ]
+}

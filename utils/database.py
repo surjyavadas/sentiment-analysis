@@ -11,7 +11,12 @@ import json
 from datetime import datetime
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-DB_PATH = os.path.join(BASE_DIR, "data", "history.db")
+
+# On Vercel (serverless), only /tmp is writable
+if os.environ.get("VERCEL"):
+    DB_PATH = os.path.join("/tmp", "history.db")
+else:
+    DB_PATH = os.path.join(BASE_DIR, "data", "history.db")
 
 
 def _get_conn():
