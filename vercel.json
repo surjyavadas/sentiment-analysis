@@ -14,6 +14,5 @@
       "src": "/(.*)",
       "dest": "api/index.py"
     }
-  ],
-  "buildCommand": "python build_nltk.py"
+  ]
 }

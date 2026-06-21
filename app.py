@@ -6,6 +6,7 @@ Serves the SPA frontend and exposes 6 API endpoints including
 URL-based social media analysis, plus demo mode support.
 """
 import os
+import sys
 import io
 import json
 import logging
@@ -13,10 +14,34 @@ import nltk
 from datetime import datetime, timezone, timedelta
 import random
 
-# Ensure NLTK can find bundled data (for Vercel deployment)
-_nltk_data_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "nltk_data")
+# ─── Ensure project root is on sys.path ──────────────────────────────
+_PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
+if _PROJECT_ROOT not in sys.path:
+    sys.path.insert(0, _PROJECT_ROOT)
+
+# ─── NLTK Data Setup (Vercel-compatible) ─────────────────────────────
+# 1. Check for bundled nltk_data next to app.py
+# 2. On Vercel, fallback to /tmp for runtime downloads
+_nltk_data_dir = os.path.join(_PROJECT_ROOT, "nltk_data")
 if os.path.isdir(_nltk_data_dir):
     nltk.data.path.insert(0, _nltk_data_dir)
+
+if os.environ.get("VERCEL"):
+    _tmp_nltk = os.path.join("/tmp", "nltk_data")
+    os.makedirs(_tmp_nltk, exist_ok=True)
+    nltk.data.path.insert(0, _tmp_nltk)
+    # Download required data to /tmp on cold start
+    _nltk_packages = [
+        ("sentiment/vader_lexicon", "vader_lexicon"),
+        ("tokenizers/punkt", "punkt"),
+        ("tokenizers/punkt_tab", "punkt_tab"),
+        ("taggers/averaged_perceptron_tagger", "averaged_perceptron_tagger"),
+    ]
+    for _lookup, _pkg in _nltk_packages:
+        try:
+            nltk.data.find(_lookup)
+        except LookupError:
+            nltk.download(_pkg, download_dir=_tmp_nltk, quiet=True)
 
 from flask import Flask, request, jsonify, render_template
 from flask_cors import CORS
@@ -27,7 +52,7 @@ from utils.url_fetcher import detect_platform, fetch_text_from_url, get_platform
 from models import vader_model, textblob_model
 
 # ─── App Setup ────────────────────────────────────────────────────────
-app = Flask(__name__)
+app = Flask(__name__, template_folder=os.path.join(_PROJECT_ROOT, "templates"))
 app.config["MAX_CONTENT_LENGTH"] = 50 * 1024 * 1024  # 50 MB
 CORS(app)
 
@@ -48,7 +73,7 @@ MODEL_MAP = {
 }
 
 # Demo data path
-DEMO_DATA_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data", "demo_posts.json")
+DEMO_DATA_PATH = os.path.join(_PROJECT_ROOT, "data", "demo_posts.json")
 
 
 def _load_demo_data():
